@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistem deteksi kematangan daun Ketapang menggunakan deep learning MobileNetV2">
+    <title>🌿 Deteksi Kematangan Daun Ketapang</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Animated background particles -->
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header" id="header">
+            <div class="header-glow"></div>
+            <div class="logo-section">
+                <div class="logo-icon">🌿</div>
+                <div class="logo-text">
+                    <h1>LeafSense AI</h1>
+                    <p class="subtitle">Deteksi Kematangan Daun Ketapang</p>
+                </div>
+            </div>
+            <p class="header-desc">Sistem klasifikasi cerdas menggunakan <strong>MobileNetV2 Deep Learning</strong> untuk mengidentifikasi tingkat kematangan daun Ketapang (<em>Terminalia catappa</em>) secara otomatis.</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Upload Section -->
+            <section class="upload-section" id="uploadSectionContainer">
+                <div class="upload-card glass-card">
+                    <!-- Tabs -->
+                    <div class="tabs">
+                        <button class="tab-btn active" data-target="liveCameraTab">📷 Live Camera</button>
+                        <button class="tab-btn" data-target="uploadTab">📁 Upload Gambar</button>
+                    </div>
+
+                    <!-- Live Camera Tab -->
+                    <div id="liveCameraTab" class="tab-content active">
+                        <div class="camera-wrapper">
+                            <video id="cameraFeed" autoplay playsinline></video>
+                            <canvas id="cameraCanvas" style="display:none;"></canvas>
+                            <div class="camera-overlay" id="cameraOverlay">
+                                <button id="btnStartCamera" class="btn-predict">
+                                    <span class="btn-text">Aktifkan Kamera</span>
+                                </button>
+                            </div>
+                            <!-- Live indicator -->
+                            <div class="live-indicator" id="liveIndicator" style="display:none;">
+                                <div class="pulse-dot"></div> Live Scanning
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload Tab -->
+                    <div id="uploadTab" class="tab-content" style="display:none;">
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon" id="uploadIcon">
+                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                            </div>
+                            <h3 class="upload-title">Upload Gambar Daun</h3>
+                            <p class="upload-hint">Drag & drop gambar di sini, atau klik untuk memilih file</p>
+                            <p class="upload-formats">PNG, JPG, JPEG, WebP • Max 16MB</p>
+                            <input type="file" id="fileInput" accept="image/*" hidden>
+                        </div>
+
+                        <!-- Image Preview -->
+                        <div class="preview-container" id="previewContainer" style="display:none;">
+                            <div class="preview-wrapper">
+                                <img id="previewImage" src="" alt="Preview">
+                                <button class="btn-remove" id="btnRemove" title="Hapus gambar">✕</button>
+                            </div>
+                            <button class="btn-predict" id="btnPredict">
+                                <span class="btn-text">🔍 Analisis Daun</span>
+                                <span class="btn-loading" style="display:none;">
+                                    <span class="spinner"></span> Menganalisis...
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display:none;">
+                <div class="result-card glass-card">
+                    <h2 class="result-title">Hasil Analisis</h2>
+
+                    <!-- Main Result -->
+                    <div class="result-main" id="resultMain">
+                        <div class="result-emoji" id="resultEmoji"></div>
+                        <div class="result-label" id="resultLabel"></div>
+                        <div class="result-confidence">
+                            <div class="confidence-ring" id="confidenceRing">
+                                <svg viewBox="0 0 120 120">
+                                    <circle class="ring-bg" cx="60" cy="60" r="52"/>
+                                    <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="52"/>
+                                </svg>
+                                <div class="confidence-value" id="confidenceValue">0%</div>
+                            </div>
+                            <span class="confidence-label">Confidence</span>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="result-description" id="resultDescription"></div>
+
+                    <!-- Characteristics -->
+                    <div class="result-characteristics" id="resultCharacteristics"></div>
+
+                    <!-- Probability Bars -->
+                    <div class="probability-section">
+                        <h3>Probabilitas Semua Kelas</h3>
+                        <div class="prob-bars" id="probBars"></div>
+                    </div>
+
+                    <!-- New Analysis Button -->
+                    <button class="btn-new" id="btnNew">📸 Analisis Gambar Baru</button>
+                </div>
+            </section>
+
+            <!-- Error Section -->
+            <div class="error-toast" id="errorToast" style="display:none;">
+                <span class="error-icon">⚠️</span>
+                <span class="error-message" id="errorMessage"></span>
+            </div>
+        </main>
+
+        <!-- Info Cards -->
+        <section class="info-section">
+            <h2 class="section-title">Tingkat Kematangan Daun Ketapang</h2>
+            <div class="info-grid">
+                <div class="info-card glass-card" style="--accent: #4CAF50;">
+                    <div class="info-icon">🟢</div>
+                    <h3>Daun Muda</h3>
+                    <p>Warna hijau muda segar dengan tekstur lunak dan halus. Biasa ditemukan di ujung ranting.</p>
+                </div>
+                <div class="info-card glass-card" style="--accent: #FF9800;">
+                    <div class="info-icon">🟤</div>
+                    <h3>Daun Sedang</h3>
+                    <p>Warna hijau tua dengan tekstur kaku dan mengkilap. Fase optimal untuk fotosintesis.</p>
+                </div>
+                <div class="info-card glass-card" style="--accent: #F44336;">
+                    <div class="info-icon">🔴</div>
+                    <h3>Daun Tua</h3>
+                    <p>Warna berubah kuning hingga merah/oranye. Tekstur kering, rapuh, dan akan segera gugur.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>🌿 LeafSense AI — Tugas Besar PSI • MobileNetV2 Transfer Learning</p>
+            <p class="footer-sub">Deteksi Kematangan Daun Ketapang (<em>Terminalia catappa</em>)</p>
+        </footer>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
