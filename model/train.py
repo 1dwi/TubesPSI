@@ -23,6 +23,11 @@ Referensi:
 import os
 import sys
 import json
+
+# Fix encoding for Windows console (emojis)
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')  # Non-interactive backend
@@ -58,7 +63,7 @@ SAVE_DIR = os.path.join(BASE_DIR, 'saved_model')
 HISTORY_DIR = os.path.join(BASE_DIR, 'saved_model', 'plots')
 
 # Class names - auto-detect dari folder dataset yang berisi gambar
-ALL_CLASS_NAMES = ['muda', 'sedang', 'tua']
+ALL_CLASS_NAMES = ['daun muda', 'daun menguning', 'daun tua']
 
 
 def detect_classes():

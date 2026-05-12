@@ -36,12 +36,14 @@
                     <div class="tabs">
                         <button class="tab-btn active" data-target="liveCameraTab">📷 Live Camera</button>
                         <button class="tab-btn" data-target="uploadTab">📁 Upload Gambar</button>
+                        <button class="tab-btn" data-target="compareTab">⚖️ Compare Mode</button>
                     </div>
 
                     <!-- Live Camera Tab -->
                     <div id="liveCameraTab" class="tab-content active">
                         <div class="camera-wrapper">
                             <video id="cameraFeed" autoplay playsinline></video>
+                            <canvas id="detectionCanvas"></canvas>
                             <canvas id="cameraCanvas" style="display:none;"></canvas>
                             <div class="camera-overlay" id="cameraOverlay">
                                 <button id="btnStartCamera" class="btn-predict">
@@ -52,6 +54,61 @@
                             <div class="live-indicator" id="liveIndicator" style="display:none;">
                                 <div class="pulse-dot"></div> Live Scanning
                             </div>
+                            <!-- Capture button -->
+                            <button class="btn-capture" id="btnCapture" title="Screenshot" style="display:none;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                    <circle cx="12" cy="13" r="4"/>
+                                </svg>
+                            </button>
+                            <!-- Switch Camera button -->
+                            <button class="btn-switch-camera" id="btnSwitchCamera" title="Ganti Kamera" style="display:none;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 9V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v2"></path>
+                                    <path d="m22 12-2-2-2 2"></path>
+                                    <path d="M4 15v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
+                                    <path d="m2 12 2 2 2-2"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <!-- Live Analysis Panel (below camera) -->
+                        <div class="live-analysis-panel" id="liveAnalysisPanel" style="display:none;">
+                            <!-- Confidence Warning -->
+                            <div class="confidence-warning" id="confidenceWarning" style="display:none;">
+                                <span class="warning-icon">⚠️</span>
+                                <span class="warning-text">Low Confidence — Hasil mungkin kurang akurat. Tambahkan dataset/train ulang model.</span>
+                            </div>
+                            <!-- Header: emoji + label + confidence ring -->
+                            <div class="live-panel-header">
+                                <div class="live-panel-main">
+                                    <span class="live-panel-emoji" id="liveResultEmoji"></span>
+                                    <div class="live-panel-label-group">
+                                        <span class="live-panel-label" id="liveResultLabel"></span>
+                                        <span class="live-panel-conf" id="liveResultConf"></span>
+                                    </div>
+                                </div>
+                                <div class="live-panel-ring">
+                                    <svg viewBox="0 0 120 120">
+                                        <circle class="ring-bg" cx="60" cy="60" r="52"/>
+                                        <circle class="ring-fill" id="liveRingFill" cx="60" cy="60" r="52"/>
+                                    </svg>
+                                    <div class="confidence-value" id="liveConfValue">0%</div>
+                                </div>
+                            </div>
+                            <!-- Description -->
+                            <div class="live-panel-description" id="liveDescription"></div>
+                            <!-- Characteristics Tags -->
+                            <div class="live-panel-chars" id="liveCharacteristics"></div>
+                            <!-- Probability Bars -->
+                            <div class="live-panel-probs">
+                                <h4>Probabilitas Semua Kelas</h4>
+                                <div class="prob-bars" id="liveProbBars"></div>
+                            </div>
+                            <!-- Grad-CAM Button -->
+                            <button class="btn-gradcam" id="btnGradcamLive">
+                                <span class="btn-text">🔬 Lihat Grad-CAM Heatmap</span>
+                                <span class="btn-loading" style="display:none;"><span class="spinner"></span> Generating...</span>
+                            </button>
                         </div>
                     </div>
 
@@ -81,6 +138,48 @@
                                 <span class="btn-text">🔍 Analisis Daun</span>
                                 <span class="btn-loading" style="display:none;">
                                     <span class="spinner"></span> Menganalisis...
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Compare Mode Tab -->
+                    <div id="compareTab" class="tab-content" style="display:none;">
+                        <div class="compare-grid">
+                            <!-- Left Slot -->
+                            <div class="compare-slot" id="compareSlotLeft">
+                                <div class="compare-upload-area" id="compareUploadLeft">
+                                    <div class="slot-icon">1️⃣</div>
+                                    <p>Pilih Gambar 1</p>
+                                    <input type="file" id="compareInputLeft" accept="image/*" hidden>
+                                </div>
+                                <div class="compare-preview" id="comparePreviewLeft" style="display:none;">
+                                    <img src="" alt="Preview 1">
+                                    <button class="btn-slot-remove" data-slot="left">✕</button>
+                                </div>
+                                <div class="compare-result" id="compareResultLeft" style="display:none;"></div>
+                            </div>
+
+                            <!-- Right Slot -->
+                            <div class="compare-slot" id="compareSlotRight">
+                                <div class="compare-upload-area" id="compareUploadRight">
+                                    <div class="slot-icon">2️⃣</div>
+                                    <p>Pilih Gambar 2</p>
+                                    <input type="file" id="compareInputRight" accept="image/*" hidden>
+                                </div>
+                                <div class="compare-preview" id="comparePreviewRight" style="display:none;">
+                                    <img src="" alt="Preview 2">
+                                    <button class="btn-slot-remove" data-slot="right">✕</button>
+                                </div>
+                                <div class="compare-result" id="compareResultRight" style="display:none;"></div>
+                            </div>
+                        </div>
+
+                        <div class="compare-actions">
+                            <button class="btn-predict" id="btnCompare">
+                                <span class="btn-text">⚖️ Bandingkan Sekarang</span>
+                                <span class="btn-loading" style="display:none;">
+                                    <span class="spinner"></span> Membandingkan...
                                 </span>
                             </button>
                         </div>
@@ -121,6 +220,14 @@
                         <div class="prob-bars" id="probBars"></div>
                     </div>
 
+                    <!-- Grad-CAM Button -->
+                    <button class="btn-gradcam" id="btnGradcamUpload">
+                        <span class="btn-text">🔬 Lihat Grad-CAM Heatmap</span>
+                        <span class="btn-loading" style="display:none;"><span class="spinner"></span> Generating...</span>
+                    </button>
+                    <!-- Grad-CAM Result -->
+                    <div class="gradcam-result" id="gradcamResultUpload" style="display:none;"></div>
+
                     <!-- New Analysis Button -->
                     <button class="btn-new" id="btnNew">📸 Analisis Gambar Baru</button>
                 </div>
@@ -131,7 +238,71 @@
                 <span class="error-icon">⚠️</span>
                 <span class="error-message" id="errorMessage"></span>
             </div>
+
+            <!-- Grad-CAM Modal -->
+            <div class="gradcam-modal" id="gradcamModal" style="display:none;">
+                <div class="gradcam-modal-content glass-card">
+                    <button class="gradcam-modal-close" id="gradcamModalClose">✕</button>
+                    <h3>🔬 Grad-CAM Heatmap</h3>
+                    <p class="gradcam-subtitle">Visualisasi area yang "dilihat" model saat prediksi.<br>Warna <strong style="color:#ff4444">merah</strong> = area paling berpengaruh, <strong style="color:#4444ff">biru</strong> = kurang berpengaruh.</p>
+                    <div class="gradcam-image-container">
+                        <img id="gradcamImage" src="" alt="Grad-CAM Heatmap">
+                    </div>
+                    <p class="gradcam-ref">Ref: Selvaraju et al., "Grad-CAM: Visual Explanations from Deep Networks" (ICCV 2017)</p>
+                </div>
+            </div>
         </main>
+
+        <!-- Stats Dashboard -->
+        <section class="stats-section" id="statsSection">
+            <h2 class="section-title">📈 Statistik Deteksi</h2>
+            <div class="stats-grid">
+                <div class="stat-card glass-card" style="--accent: #22c55e;">
+                    <div class="stat-number" id="statTotal">0</div>
+                    <div class="stat-label">Total Scan</div>
+                    <div class="stat-icon">🔍</div>
+                </div>
+                <div class="stat-card glass-card" style="--accent: #4CAF50;">
+                    <div class="stat-number" id="statMuda">0</div>
+                    <div class="stat-label">Daun Muda</div>
+                    <div class="stat-icon">🟢</div>
+                </div>
+                <div class="stat-card glass-card" style="--accent: #FF9800;">
+                    <div class="stat-number" id="statSedang">0</div>
+                    <div class="stat-label">Daun Sedang</div>
+                    <div class="stat-icon">🟤</div>
+                </div>
+                <div class="stat-card glass-card" style="--accent: #F44336;">
+                    <div class="stat-number" id="statTua">0</div>
+                    <div class="stat-label">Daun Tua</div>
+                    <div class="stat-icon">🔴</div>
+                </div>
+                <div class="stat-card glass-card" style="--accent: #f59e0b;">
+                    <div class="stat-number" id="statUnknown">0</div>
+                    <div class="stat-label">Tidak Yakin</div>
+                    <div class="stat-icon">❓</div>
+                </div>
+                <div class="stat-card glass-card" style="--accent: #3b82f6;">
+                    <div class="stat-number" id="statCaptures">0</div>
+                    <div class="stat-label">Screenshot</div>
+                    <div class="stat-icon">📸</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Log -->
+        <section class="history-section" id="historySection">
+            <div class="history-header">
+                <h2 class="section-title">📋 Riwayat Analisis</h2>
+                <button class="btn-clear-history" id="btnClearHistory" title="Hapus riwayat">🗑️ Hapus</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <div class="history-empty" id="historyEmpty">
+                    <span>📭</span>
+                    <p>Belum ada riwayat analisis</p>
+                </div>
+            </div>
+        </section>
 
         <!-- Info Cards -->
         <section class="info-section">

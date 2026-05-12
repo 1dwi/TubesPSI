@@ -150,6 +150,7 @@ Thumbs.db
 # Project specific
 dataset/
 saved_model/
+web/static/uploads/
 model/*.h5
 model/*.pth
 model/*.pkl
