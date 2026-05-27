@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <!-- Animated background particles -->
@@ -29,8 +30,9 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Upload Section -->
-            <section class="upload-section" id="uploadSectionContainer">
+            <div class="main-layout">
+                <!-- Upload Section -->
+                <section class="upload-section" id="uploadSectionContainer">
                 <div class="upload-card glass-card">
                     <!-- Tabs -->
                     <div class="tabs">
@@ -69,45 +71,6 @@
                                     <path d="M4 15v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
                                     <path d="m2 12 2 2 2-2"></path>
                                 </svg>
-                            </button>
-                        </div>
-                        <!-- Live Analysis Panel (below camera) -->
-                        <div class="live-analysis-panel" id="liveAnalysisPanel" style="display:none;">
-                            <!-- Confidence Warning -->
-                            <div class="confidence-warning" id="confidenceWarning" style="display:none;">
-                                <span class="warning-icon">⚠️</span>
-                                <span class="warning-text">Low Confidence — Hasil mungkin kurang akurat. Tambahkan dataset/train ulang model.</span>
-                            </div>
-                            <!-- Header: emoji + label + confidence ring -->
-                            <div class="live-panel-header">
-                                <div class="live-panel-main">
-                                    <span class="live-panel-emoji" id="liveResultEmoji"></span>
-                                    <div class="live-panel-label-group">
-                                        <span class="live-panel-label" id="liveResultLabel"></span>
-                                        <span class="live-panel-conf" id="liveResultConf"></span>
-                                    </div>
-                                </div>
-                                <div class="live-panel-ring">
-                                    <svg viewBox="0 0 120 120">
-                                        <circle class="ring-bg" cx="60" cy="60" r="52"/>
-                                        <circle class="ring-fill" id="liveRingFill" cx="60" cy="60" r="52"/>
-                                    </svg>
-                                    <div class="confidence-value" id="liveConfValue">0%</div>
-                                </div>
-                            </div>
-                            <!-- Description -->
-                            <div class="live-panel-description" id="liveDescription"></div>
-                            <!-- Characteristics Tags -->
-                            <div class="live-panel-chars" id="liveCharacteristics"></div>
-                            <!-- Probability Bars -->
-                            <div class="live-panel-probs">
-                                <h4>Probabilitas Semua Kelas</h4>
-                                <div class="prob-bars" id="liveProbBars"></div>
-                            </div>
-                            <!-- Grad-CAM Button -->
-                            <button class="btn-gradcam" id="btnGradcamLive">
-                                <span class="btn-text">🔬 Lihat Grad-CAM Heatmap</span>
-                                <span class="btn-loading" style="display:none;"><span class="spinner"></span> Generating...</span>
                             </button>
                         </div>
                     </div>
@@ -187,10 +150,20 @@
                 </div>
             </section>
 
-            <!-- Results Section -->
-            <section class="results-section" id="resultsSection" style="display:none;">
-                <div class="result-card glass-card">
-                    <h2 class="result-title">Hasil Analisis</h2>
+                <!-- Results Section -->
+                <section class="results-section" id="resultsSection">
+                    <div class="result-card glass-card">
+                        
+                        <!-- Empty State -->
+                        <div class="result-empty-state" id="resultEmptyState">
+                            <div class="empty-icon">🍃</div>
+                            <h3>Belum ada hasil</h3>
+                            <p>Lakukan scan menggunakan kamera atau upload gambar daun Ketapang untuk melihat hasil analisis di sini.</p>
+                        </div>
+
+                        <!-- Result Data (Hidden initially) -->
+                        <div id="resultDataContainer" style="display: none;">
+                            <h2 class="result-title">Hasil Analisis</h2>
 
                     <!-- Main Result -->
                     <div class="result-main" id="resultMain">
@@ -228,12 +201,14 @@
                     <!-- Grad-CAM Result -->
                     <div class="gradcam-result" id="gradcamResultUpload" style="display:none;"></div>
 
-                    <!-- New Analysis Button -->
-                    <button class="btn-new" id="btnNew">📸 Analisis Gambar Baru</button>
+                        <!-- New Analysis Button -->
+                        <button class="btn-new" id="btnNew">📸 Analisis Gambar Baru</button>
+                    </div>
                 </div>
             </section>
+        </div>
 
-            <!-- Error Section -->
+        <!-- Error Section -->
             <div class="error-toast" id="errorToast" style="display:none;">
                 <span class="error-icon">⚠️</span>
                 <span class="error-message" id="errorMessage"></span>
@@ -257,35 +232,46 @@
         <section class="stats-section" id="statsSection">
             <h2 class="section-title">📈 Statistik Deteksi</h2>
             <div class="stats-grid">
-                <div class="stat-card glass-card" style="--accent: #22c55e;">
-                    <div class="stat-number" id="statTotal">0</div>
-                    <div class="stat-label">Total Scan</div>
-                    <div class="stat-icon">🔍</div>
+                <!-- Stats cards -->
+                <div class="stats-cards">
+                    <div class="stat-card glass-card" style="--accent: #22c55e;">
+                        <div class="stat-number" id="statTotal">0</div>
+                        <div class="stat-label">Total Scan</div>
+                        <div class="stat-icon">🔍</div>
+                    </div>
+                    <div class="stat-card glass-card" style="--accent: #4CAF50;">
+                        <div class="stat-number" id="statMuda">0</div>
+                        <div class="stat-label">Daun Muda</div>
+                        <div class="stat-icon">🟢</div>
+                    </div>
+                    <div class="stat-card glass-card" style="--accent: #FF9800;">
+                        <div class="stat-number" id="statSedang">0</div>
+                        <div class="stat-label">Daun Sedang</div>
+                        <div class="stat-icon">🟤</div>
+                    </div>
+                    <div class="stat-card glass-card" style="--accent: #F44336;">
+                        <div class="stat-number" id="statTua">0</div>
+                        <div class="stat-label">Daun Tua</div>
+                        <div class="stat-icon">🔴</div>
+                    </div>
+                    <div class="stat-card glass-card" style="--accent: #f59e0b;">
+                        <div class="stat-number" id="statUnknown">0</div>
+                        <div class="stat-label">Tidak Yakin</div>
+                        <div class="stat-icon">❓</div>
+                    </div>
+                    <div class="stat-card glass-card" style="--accent: #3b82f6;">
+                        <div class="stat-number" id="statCaptures">0</div>
+                        <div class="stat-label">Screenshot</div>
+                        <div class="stat-icon">📸</div>
+                    </div>
                 </div>
-                <div class="stat-card glass-card" style="--accent: #4CAF50;">
-                    <div class="stat-number" id="statMuda">0</div>
-                    <div class="stat-label">Daun Muda</div>
-                    <div class="stat-icon">🟢</div>
-                </div>
-                <div class="stat-card glass-card" style="--accent: #FF9800;">
-                    <div class="stat-number" id="statSedang">0</div>
-                    <div class="stat-label">Daun Sedang</div>
-                    <div class="stat-icon">🟤</div>
-                </div>
-                <div class="stat-card glass-card" style="--accent: #F44336;">
-                    <div class="stat-number" id="statTua">0</div>
-                    <div class="stat-label">Daun Tua</div>
-                    <div class="stat-icon">🔴</div>
-                </div>
-                <div class="stat-card glass-card" style="--accent: #f59e0b;">
-                    <div class="stat-number" id="statUnknown">0</div>
-                    <div class="stat-label">Tidak Yakin</div>
-                    <div class="stat-icon">❓</div>
-                </div>
-                <div class="stat-card glass-card" style="--accent: #3b82f6;">
-                    <div class="stat-number" id="statCaptures">0</div>
-                    <div class="stat-label">Screenshot</div>
-                    <div class="stat-icon">📸</div>
+
+                <!-- Stats Chart -->
+                <div class="chart-container glass-card">
+                    <h3>📊 Distribusi Kematangan</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="statsChart"></canvas>
+                    </div>
                 </div>
             </div>
         </section>

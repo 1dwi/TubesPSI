@@ -59,15 +59,31 @@ document.addEventListener('DOMContentLoaded', () => {
     let bboxFadeTimeout = null;
 
     // Stats & History
-    let stats = JSON.parse(localStorage.getItem('leafsense_stats') || '{"total":0,"muda":0,"sedang":0,"tua":0,"unknown":0,"captures":0}');
+    let stats = JSON.parse(localStorage.getItem('leafsense_stats') || '{"total":0,"daun muda":0,"daun menguning":0,"daun tua":0,"unknown":0,"captures":0}');
     // Ensure stats has all keys (backward compat)
+    if (stats.muda !== undefined) {
+        stats['daun muda'] = (stats['daun muda'] || 0) + stats.muda;
+        delete stats.muda;
+    }
+    if (stats.sedang !== undefined) {
+        stats['daun menguning'] = (stats['daun menguning'] || 0) + stats.sedang;
+        delete stats.sedang;
+    }
+    if (stats.tua !== undefined) {
+        stats['daun tua'] = (stats['daun tua'] || 0) + stats.tua;
+        delete stats.tua;
+    }
     if (!stats.unknown) stats.unknown = 0;
-    if (!stats.sedang) stats.sedang = 0;
+    if (!stats['daun menguning']) stats['daun menguning'] = 0;
+    if (!stats['daun muda']) stats['daun muda'] = 0;
+    if (!stats['daun tua']) stats['daun tua'] = 0;
     let history = JSON.parse(localStorage.getItem('leafsense_history') || '[]');
     let lastLiveData = null; // Store last live prediction for capture
+    let statsChart = null; // Chart.js instance
 
     // --- Init ---
     createParticles();
+    initChart();
     renderStats();
     renderHistory();
 
@@ -154,8 +170,8 @@ document.addEventListener('DOMContentLoaded', () => {
             btnCapture.style.display = 'none';
             btnSwitchCamera.style.display = 'none';
             detContext.clearRect(0, 0, detectionCanvas.width, detectionCanvas.height);
-            const panel = document.getElementById('liveAnalysisPanel');
-            if (panel) panel.style.display = 'none';
+            document.getElementById('resultDataContainer').style.display = 'none';
+            document.getElementById('resultEmptyState').style.display = 'flex';
         }
     }
 
@@ -182,11 +198,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (isScanning) {
                     // No leaf detected (or rejected by backend)
                     detContext.clearRect(0, 0, detectionCanvas.width, detectionCanvas.height);
-                    const panel = document.getElementById('liveAnalysisPanel');
-                    if (panel) panel.style.display = 'none';
+                    if (!lastLiveData) {
+                        document.getElementById('resultDataContainer').style.display = 'none';
+                        document.getElementById('resultEmptyState').style.display = 'flex';
+                    }
                     currentBBox = null;
                     targetBBox = null;
-                    lastLiveData = null;
                 }
             } catch (err) {
                 console.error("Scanning error:", err);
@@ -309,7 +326,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fileInput.value = '';
         previewContainer.style.display = 'none';
         uploadArea.style.display = 'block';
-        resultsSection.style.display = 'none';
+        document.getElementById('resultDataContainer').style.display = 'none';
+        document.getElementById('resultEmptyState').style.display = 'flex';
     });
 
     // --- Predict (Upload) ---
@@ -349,77 +367,9 @@ document.addEventListener('DOMContentLoaded', () => {
         saveStats();
         renderStats();
 
-        // === LIVE CAMERA ===
-        if (fromCamera) {
-            lastLiveData = data;
-            const panel = document.getElementById('liveAnalysisPanel');
+        // Confidence warning removed in UI redesign
 
-            // Confidence warning
-            const warning = document.getElementById('confidenceWarning');
-            if (confidence < 0.60) {
-                warning.style.display = 'flex';
-            } else {
-                warning.style.display = 'none';
-            }
-
-            // Emoji + Label
-            document.getElementById('liveResultEmoji').textContent = pred.emoji;
-            const labelEl = document.getElementById('liveResultLabel');
-            labelEl.textContent = pred.label;
-            labelEl.style.color = pred.color;
-            document.getElementById('liveResultConf').textContent = `Confidence: ${(confidence * 100).toFixed(1)}%`;
-
-            // Confidence ring
-            const circumference = 2 * Math.PI * 52;
-            const offset = circumference * (1 - confidence);
-            const liveRing = document.getElementById('liveRingFill');
-            liveRing.style.stroke = pred.color;
-            liveRing.style.transition = 'stroke-dashoffset 0.6s ease';
-            liveRing.style.strokeDashoffset = offset;
-            const liveConfVal = document.getElementById('liveConfValue');
-            liveConfVal.style.color = pred.color;
-            liveConfVal.textContent = (confidence * 100).toFixed(1) + '%';
-
-            // Description
-            document.getElementById('liveDescription').textContent = pred.description;
-
-            // Characteristic tags
-            const charContainer = document.getElementById('liveCharacteristics');
-            charContainer.innerHTML = '';
-            (pred.characteristics || []).forEach((c) => {
-                const tag = document.createElement('span');
-                tag.className = 'char-tag';
-                tag.textContent = c;
-                charContainer.appendChild(tag);
-            });
-
-            // Probability bars
-            const probBars = document.getElementById('liveProbBars');
-            probBars.innerHTML = '';
-            const colors = { 'daun muda': '#4CAF50', 'daun menguning': '#FF9800', 'daun tua': '#F44336', unknown: '#f59e0b' };
-            const labels = { 'daun muda': 'Daun Muda', 'daun menguning': 'Daun Menguning', 'daun tua': 'Daun Tua', unknown: 'Tidak Yakin' };
-            Object.keys(probs).forEach(cls => {
-                const prob = probs[cls];
-                const item = document.createElement('div');
-                item.className = 'prob-bar-item';
-                item.innerHTML = `
-                    <div class="prob-bar-header">
-                        <span class="prob-bar-label">${labels[cls] || cls}</span>
-                        <span class="prob-bar-value" style="color: ${colors[cls] || '#666'}">${(prob * 100).toFixed(2)}%</span>
-                    </div>
-                    <div class="prob-bar-track">
-                        <div class="prob-bar-fill" style="background: ${colors[cls] || '#666'}; width: ${(prob * 100)}%; transition: width 0.5s ease"></div>
-                    </div>
-                `;
-                probBars.appendChild(item);
-            });
-
-            panel.style.display = 'block';
-            updateBoundingBox(pred.bbox, pred.color, pred.label);
-            return;
-        }
-
-        // === UPLOAD MODE ===
+        // Common Result UI Update
         document.getElementById('resultEmoji').textContent = pred.emoji;
         document.getElementById('resultLabel').textContent = pred.label;
         document.getElementById('resultLabel').style.color = pred.color;
@@ -431,10 +381,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const confValue = document.getElementById('confidenceValue');
         confValue.style.color = pred.color;
 
-        ringFill.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
+        const animDuration = fromCamera ? 0.6 : 1.5;
+        ringFill.style.transition = `stroke-dashoffset ${animDuration}s cubic-bezier(0.4, 0, 0.2, 1)`;
         requestAnimationFrame(() => {
             ringFill.style.strokeDashoffset = offset;
-            animateCounter(confValue, 0, confidence * 100, 1200);
+            if (fromCamera) {
+                confValue.textContent = (confidence * 100).toFixed(1) + '%';
+            } else {
+                animateCounter(confValue, 0, confidence * 100, 1200);
+            }
         });
 
         document.getElementById('resultDescription').textContent = pred.description;
@@ -468,15 +423,24 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             probBars.appendChild(item);
             requestAnimationFrame(() => {
-                setTimeout(() => { item.querySelector('.prob-bar-fill').style.width = (prob * 100) + '%'; }, 200);
+                setTimeout(() => { item.querySelector('.prob-bar-fill').style.width = (prob * 100) + '%'; }, fromCamera ? 0 : 200);
             });
         });
 
+        document.getElementById('resultEmptyState').style.display = 'none';
+        document.getElementById('resultDataContainer').style.display = 'block';
         resultsSection.style.display = 'block';
-        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-        // Add to history for upload
-        addToHistory(data, 'upload');
+        
+        if (fromCamera) {
+            lastLiveData = data;
+            updateBoundingBox(pred.bbox, pred.color, pred.label);
+        } else {
+            // Scroll to results only on mobile layout
+            if (window.innerWidth < 1024) {
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            addToHistory(data, 'upload');
+        }
     }
 
     // --- Bounding Box Smoothing ---
@@ -642,7 +606,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnClearHistory.addEventListener('click', () => {
             history = [];
             localStorage.removeItem('leafsense_history');
-            stats = { total: 0, muda: 0, sedang: 0, tua: 0, unknown: 0, captures: 0 };
+            stats = { total: 0, 'daun muda': 0, 'daun menguning': 0, 'daun tua': 0, unknown: 0, captures: 0 };
             saveStats();
             renderHistory();
             renderStats();
@@ -658,11 +622,106 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderStats() {
         const el = (id) => document.getElementById(id);
         if (el('statTotal')) el('statTotal').textContent = stats.total;
-        if (el('statMuda')) el('statMuda').textContent = stats.muda || 0;
-        if (el('statSedang')) el('statSedang').textContent = stats.sedang || 0;
-        if (el('statTua')) el('statTua').textContent = stats.tua || 0;
+        if (el('statMuda')) el('statMuda').textContent = stats['daun muda'] || 0;
+        if (el('statSedang')) el('statSedang').textContent = stats['daun menguning'] || 0;
+        if (el('statTua')) el('statTua').textContent = stats['daun tua'] || 0;
         if (el('statUnknown')) el('statUnknown').textContent = stats.unknown || 0;
         if (el('statCaptures')) el('statCaptures').textContent = stats.captures || 0;
+        
+        updateChart();
+    }
+
+    // --- Chart Logic ---
+    function initChart() {
+        const ctx = document.getElementById('statsChart');
+        if (!ctx) return;
+
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+
+        statsChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Daun Muda', 'Daun Sedang', 'Daun Tua', 'Tidak Yakin'],
+                datasets: [{
+                    data: [0, 0, 0, 0],
+                    backgroundColor: [
+                        '#4CAF50', // Muda
+                        '#FF9800', // Sedang
+                        '#F44336', // Tua
+                        '#f59e0b'  // Unknown
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 15
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            font: { size: 11, weight: '500' }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                        titleFont: { size: 13, weight: '700' },
+                        bodyFont: { size: 12 },
+                        padding: 12,
+                        cornerRadius: 8,
+                        displayColors: true
+                    }
+                },
+                cutout: '70%',
+                animation: {
+                    animateScale: true,
+                    animateRotate: true,
+                    duration: 2000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+
+    function updateChart() {
+        if (!statsChart) return;
+        
+        const data = [
+            stats['daun muda'] || 0,
+            stats['daun menguning'] || 0,
+            stats['daun tua'] || 0,
+            stats.unknown || 0
+        ];
+
+        // Only update if there is data to show
+        const hasData = data.some(v => v > 0);
+        
+        // If no data, show a grey placeholder ring
+        if (!hasData) {
+            statsChart.data.datasets[0].data = [1, 1, 1, 1]; // Equal placeholder
+            statsChart.data.datasets[0].backgroundColor = [
+                'rgba(255, 255, 255, 0.05)',
+                'rgba(255, 255, 255, 0.05)',
+                'rgba(255, 255, 255, 0.05)',
+                'rgba(255, 255, 255, 0.05)'
+            ];
+            statsChart.options.plugins.tooltip.enabled = false;
+        } else {
+            statsChart.data.datasets[0].data = data;
+            statsChart.data.datasets[0].backgroundColor = [
+                '#4CAF50',
+                '#FF9800',
+                '#F44336',
+                '#f59e0b'
+            ];
+            statsChart.options.plugins.tooltip.enabled = true;
+        }
+
+        statsChart.update();
     }
 
     // --- Animate Counter ---
@@ -684,7 +743,10 @@ document.addEventListener('DOMContentLoaded', () => {
         fileInput.value = '';
         previewContainer.style.display = 'none';
         uploadArea.style.display = 'block';
-        resultsSection.style.display = 'none';
+        
+        document.getElementById('resultDataContainer').style.display = 'none';
+        document.getElementById('resultEmptyState').style.display = 'flex';
+        
         const isLiveTab = document.getElementById('liveCameraTab').classList.contains('active');
         if (!isLiveTab) {
             stopCamera();
@@ -751,7 +813,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gradcamModal = document.getElementById('gradcamModal');
     const gradcamModalClose = document.getElementById('gradcamModalClose');
     const gradcamImage = document.getElementById('gradcamImage');
-    const btnGradcamLive = document.getElementById('btnGradcamLive');
+
     const btnGradcamUpload = document.getElementById('btnGradcamUpload');
 
     function showGradcamModal(imageSrc) {
@@ -801,16 +863,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Grad-CAM from live camera
-    btnGradcamLive.addEventListener('click', () => {
-        if (!cameraFeed.srcObject || cameraFeed.videoWidth === 0) return;
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = cameraFeed.videoWidth;
-        tempCanvas.height = cameraFeed.videoHeight;
-        tempCanvas.getContext('2d').drawImage(cameraFeed, 0, 0);
-        const base64 = tempCanvas.toDataURL('image/jpeg', 0.8);
-        requestGradcam(btnGradcamLive, base64);
-    });
+
 
     // Grad-CAM from uploaded image
     btnGradcamUpload.addEventListener('click', () => {

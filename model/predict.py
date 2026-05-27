@@ -7,6 +7,11 @@ Cara pakai:
 """
 
 import os, sys, json, numpy as np
+
+# Fix encoding for Windows console (emojis)
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+
 import tensorflow as tf
 from tensorflow import keras
 from PIL import Image
@@ -18,9 +23,9 @@ MODEL_PATH = os.path.join(SAVE_DIR, 'best_model.keras')
 CLASS_MAP_PATH = os.path.join(SAVE_DIR, 'class_names.json')
 
 LABEL_INFO = {
-    'muda': {'emoji': '🟢', 'desc': 'Daun muda - Hijau muda segar, tekstur lunak'},
-    'sedang': {'emoji': '🟤', 'desc': 'Daun sedang/dewasa - Hijau tua, tekstur kaku'},
-    'tua': {'emoji': '🔴', 'desc': 'Daun tua - Kuning/merah/coklat, kering rapuh'}
+    'daun muda': {'emoji': '🟢', 'desc': 'Daun muda - Hijau muda segar, tekstur lunak'},
+    'daun menguning': {'emoji': '🟤', 'desc': 'Daun menguning - Hijau tua/kekuningan, tekstur kaku'},
+    'daun tua': {'emoji': '🔴', 'desc': 'Daun tua - Kuning/merah/oranye, kering rapuh'}
 }
 
 def predict_image(image_path):
