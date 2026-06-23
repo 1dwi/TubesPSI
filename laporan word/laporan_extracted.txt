@@ -1,0 +1,1428 @@
+Klasifikasi Tingkat Kematangan Daun Ketapang (Terminalia catappa) 
+Menggunakan Metode Transfer Learning dengan Arsitektur MobileNetV2 
+ 
+Classification of Maturity Level of Ketapang Leaves (Terminalia catappa) Using Transfer Learning 
+Method with MobileNetV2 Architecture 
+ 
+1st Ariel Maulana 
+ Fakultas Ilmu Terapan 
+Universitas Telkom 
+Bandung, Indonesia 
+arielmaulanaam@student.telkomu
+niversity.ac.id 
+ 
+2nd  Dwi Farrel Elfarindu  
+Fakultas Ilmu Terapan 
+Universitas Telkom 
+Bandung, Indonesia 
+dwifarrelelfarindu@student.te
+lkomuniversity.ac.id 
+3rd Muhammad Zharfan Al 
+Ghifari 
+Fakultas Ilmu Terapan 
+Universitas Telkom 
+Bandung, Indonesia  
+muhammadzharfanal@student.tel
+komuniversity.ac.id 
+ 
+ 
+Abstrak — Tingkat kematangan daun 
+ketapang (Terminalia catappa) memengaruhi 
+kandungan senyawa aktif di dalamnya, namun 
+identifikasi manual melalui pengamatan visual 
+masih bersifat subjektif dan kurang efisien. 
+Penelitian ini mengusulkan sistem klasifikasi 
+citra digital menggunakan metode transfer 
+learning berbasis arsitektur MobileNetV2 yang 
+efisien 
+secara 
+komputasi. 
+Dataset 
+yang 
+digunakan terdiri dari sekitar 2.400 citra yang 
+dibagi ke dalam tiga kelas: daun muda, 
+menguning, dan tua, dengan menerapkan 
+tahapan 
+augmentasi 
+untuk 
+meningkatkan 
+generalisasi 
+model. 
+Hasil 
+pengujian 
+menunjukkan model mampu mencapai tingkat 
+akurasi 
+sebesar 
+95,42%, 
+didukung 
+oleh 
+performa precision, recall, dan F1-score yang 
+tinggi serta konsisten di seluruh kelas. Dengan 
+demikian, penerapan MobileNetV2 terbukti 
+menjadi solusi yang efektif dan handal untuk 
+klasifikasi kematangan daun ketapang secara 
+otomatis. 
+Kata Kunci: daun ketapang, transfer 
+learning, MobileNetV2, klasifikasi citra, deep 
+learning. 
+Abstract — The maturity level of ketapang 
+leaves (Terminalia catappa) affects their active 
+compound content, yet manual identification via 
+visual observation remains subjective and 
+inefficient. This study proposes a digital image 
+classification system using a transfer learning 
+method based on the computationally efficient 
+MobileNetV2 
+architecture. 
+The 
+dataset 
+comprises 
+approximately 
+2,400 
+images 
+categorized 
+into 
+three 
+classes: 
+young, 
+yellowing, and old leaves, incorporating data 
+augmentation 
+steps 
+to 
+enhance 
+model 
+generalization. The test results show that the 
+model achieves an accuracy of 95.42%, 
+supported by high and consistent precision, 
+recall, and F1-score across all classes. 
+Consequently, the application of MobileNetV2 
+proves to be an effective and reliable solution for 
+automated ketapang leaf maturity classification. 
+Keywords: ketapang leaf, transfer learning, 
+MobileNetV2, 
+image 
+classification, 
+deep 
+learning. 
+ 
+I. PENDAHULUAN 
+Perkembangan deep learning, khususnya 
+arsitektur Convolutional Neural Network (CNN), 
+telah membawa perubahan signifikan dalam 
+otomatisasi pengenalan pola visual. Teknologi ini 
+banyak diadopsi untuk menggantikan proses 
+identifikasi manual di berbagai sektor, termasuk 
+pengolahan citra komoditas hayati. Salah satu 
+objek yang potensial untuk dikembangkan adalah 
+daun ketapang (Terminalia catappa). Daun dari 
+tanaman tropis ini kaya akan senyawa bioaktif 
+seperti flavonoid, tanin, dan polifenol yang 
+berguna sebagai antioksidan serta antibakteri. 
+Karena kadar senyawa aktif tersebut sangat 
+dipengaruhi oleh fase pertumbuhan daun, 
+identifikasi 
+tingkat 
+kematangan 
+menjadi 
+parameter krusial untuk menentukan kualitas 
+pemanfaatannya. 
+Namun, 
+penentuan 
+kematangan 
+daun 
+ketapang saat ini umumnya masih mengandalkan 
+pengamatan 
+visual 
+manusia. 
+Metode 
+konvensional ini memiliki keterbatasan karena 
+sifatnya yang subjektif, sangat bergantung pada 
+pengalaman personal pengamat, serta rentan 
+keliru akibat variasi pencahayaan. Di samping itu, 
+penyortiran manual memerlukan waktu lama dan 
+kurang efisien jika diterapkan pada skala besar. 
+Untuk 
+mengatasi 
+kendala 
+tersebut, 
+pemanfaatan citra digital dikombinasikan dengan 
+metode transfer learning menawarkan solusi 
+yang menjanjikan. Melalui transfer learning, 
+model dapat memanfaatkan bobot (weights) yang 
+telah terlatih dari dataset berskala besar seperti 
+ImageNet. Pendekatan ini terbukti efektif 
+menghasilkan akurasi optimal dan mempercepat 
+konvergensi pelatihan, sekalipun ukuran dataset 
+lokal yang digunakan relatif terbatas [1]. 
+Dalam 
+penelitian 
+ini, 
+arsitektur 
+MobileNetV2 dipilih sebagai basis klasifikasi. 
+MobileNetV2 
+memiliki 
+keunggulan 
+pada 
+struktur 
+inverted 
+residuals 
+dan 
+linear 
+bottlenecks 
+yang 
+membuatnya 
+mampu 
+menghasilkan akurasi tinggi dengan beban 
+komputasi dan jumlah parameter yang minimal 
+[2]. Karakteristik tersebut sangat ideal untuk 
+skenario 
+implementasi 
+perangkat 
+dengan 
+sumber daya komputasi terbatas. 
+Berdasarkan 
+latar 
+belakang 
+tersebut, 
+penelitian ini berfokus pada pengembangan 
+sistem klasifikasi tingkat kematangan daun 
+ketapang yang dibagi ke dalam tiga kelas utama: 
+daun muda, menguning, dan tua. Tujuan 
+utamanya adalah membangun model klasifikasi 
+berbasis 
+MobileNetV2, 
+mengevaluasi 
+performanya melalui metrik akurasi, precision, 
+recall, dan F1-score, serta menganalisis sejauh 
+mana efektivitas transfer learning dalam 
+mengoptimalkan klasifikasi pada data citra daun 
+ketapang [2]. Hasil penelitian ini diharapkan 
+dapat 
+menyediakan 
+metode 
+identifikasi 
+kematangan daun yang lebih cepat, objektif, dan 
+konsisten. 
+ 
+II. KAJIAN TEORI 
+A. Terminalia catappa L. (Daun Ketapang) 
+Terminalia catappa atau ketapang 
+merupakan tanaman tropis yang banyak 
+ditemukan di wilayah Asia Tenggara. 
+Tanaman ini memiliki daun berukuran lebar 
+dengan 
+bentuk 
+oval 
+dan 
+mengalami 
+perubahan warna yang cukup jelas selama 
+proses pertumbuhannya. Perubahan warna 
+tersebut umumnya dimulai dari hijau pada 
+fase muda, berubah menjadi kuning pada 
+fase 
+transisi, 
+dan 
+menjadi 
+cokelat 
+kemerahan pada fase tua [3]. 
+Karakteristik perubahan warna tersebut 
+menjadikan daun ketapang sebagai objek 
+yang sesuai untuk penelitian klasifikasi citra 
+berbasis kecerdasan buatan. Perbedaan 
+visual antar tingkat kematangan dapat 
+diamati melalui variasi warna, tekstur 
+permukaan, dan pola distribusi pigmen 
+daun. 
+Dalam penelitian ini, daun ketapang 
+diklasifikasikan ke dalam tiga kategori 
+utama, yaitu daun muda, daun menguning, 
+dan daun tua. Ketiga kategori tersebut 
+digunakan sebagai kelas target dalam proses 
+pelatihan model klasifikasi citra berbasis 
+deep learning [4]. 
+B. Pengolahan Citra Digital  
+Pengolahan citra digital merupakan proses 
+pemanfaatan 
+teknik 
+komputasi 
+untuk 
+memperoleh informasi dari suatu gambar digital. 
+Dalam 
+bidang 
+computer 
+vision, 
+citra 
+direpresentasikan sebagai matriks piksel yang 
+menyimpan informasi warna dan intensitas 
+cahaya. 
+Pada penelitian ini, citra daun ketapang 
+digunakan sebagai masukan utama untuk sistem 
+klasifikasi. Sebelum diproses oleh model deep 
+learning, citra terlebih dahulu melalui tahap 
+preprocessing yang meliputi penyesuaian ukuran 
+gambar menjadi 224×224 piksel serta normalisasi 
+nilai 
+piksel 
+menggunakan 
+fungsi 
+preprocess_input 
+sesuai 
+standar 
+arsitektur 
+MobileNetV2. 
+Selain preprocessing, diterapkan pula teknik 
+augmentasi data untuk meningkatkan keragaman 
+data pelatihan. Augmentasi dilakukan melalui 
+transformasi seperti rotasi, pembalikan citra, 
+perubahan tingkat kecerahan, perubahan kontras, 
+dan zoom. Teknik ini bertujuan meningkatkan 
+kemampuan generalisasi model serta mengurangi 
+risiko overfitting selama proses pelatihan. 
+C. Transfer Learning 
+Transfer 
+learning 
+merupakan 
+metode 
+pembelajaran 
+mesin 
+yang 
+memanfaatkan 
+pengetahuan dari model yang telah dilatih 
+sebelumnya pada dataset berskala besar untuk 
+menyelesaikan permasalahan baru yang memiliki 
+karakteristik serupa. Pendekatan ini banyak 
+digunakan pada bidang klasifikasi citra karena 
+mampu menghasilkan performa yang baik 
+meskipun jumlah data pelatihan relatif terbatas 
+[5]. 
+Pada penelitian ini digunakan model 
+MobileNetV2 yang telah dilatih menggunakan 
+dataset ImageNet sebagai sumber pengetahuan 
+awal. Bobot hasil pelatihan tersebut dimanfaatkan 
+sebagai 
+representasi 
+fitur 
+dasar 
+sebelum 
+dilakukan proses penyesuaian terhadap dataset 
+daun ketapang. 
+Strategi transfer learning yang digunakan 
+adalah partial fine-tuning, yaitu membuka 
+kembali sebagian lapisan akhir model untuk 
+dilatih ulang menggunakan data penelitian. 
+Pendekatan 
+ini 
+memungkinkan 
+model 
+beradaptasi terhadap karakteristik visual daun 
+ketapang 
+tanpa 
+kehilangan 
+kemampuan 
+ekstraksi fitur yang telah dipelajari sebelumnya. 
+D. Convolutional Neural Network (CNN) dan 
+Arsitektur Deep Learning 
+Convolutional Neural Network (CNN) 
+adalah kelas khusus dari artificial neural 
+network yang dirancang untuk memproses data 
+dengan struktur grid-like, seperti citra dua 
+dimensi. CNN memanfaatkan operasi konvolusi 
+untuk mengekstrak fitur lokal dari input dan 
+membangun representasi hierarkis dari fitur 
+kompleks [6]. Struktur dasar CNN terdiri dari 
+beberapa jenis layer. 
+Convolutional Layer: Layer ini menerapkan 
+operasi konvolusi menggunakan filter (kernel) 
+kecil yang digeser di seluruh citra input. Setiap 
+filter belajar mendeteksi pola lokal spesifik. 
+Output dari convolutional layer disebut feature 
+map. 
+Activation Function : Fungsi aktivasi 
+Rectified 
+Linear 
+Unit 
+(ReLU), 
+yang 
+didefinisikan sebagai f(x) = max(0, x), 
+diterapkan 
+setelah 
+konvolusi 
+untuk 
+memperkenalkan nonlinearitas. ReLU telah 
+menjadi fungsi aktivasi standar dalam deep 
+learning 
+karena 
+efisiensi 
+komputasinya. 
+Pooling 
+Layer: 
+Layer 
+ini 
+melakukan 
+downsampling untuk mengurangi dimensi 
+feature map sambil mempertahankan informasi 
+penting. Max pooling, yang mengambil nilai 
+maksimum dari region lokal, adalah teknik 
+pooling paling umum. 
+Fully 
+Connected 
+Layer: 
+Layer 
+ini 
+menghubungkan semua neuron dari layer 
+sebelumnya ke layer saat ini. Fully connected 
+layer biasanya digunakan di akhir network 
+untuk classification tasks. 
+E. Arsitektur MobileNetV2 
+MobileNetV2 adalah arsitektur neural 
+network yang dirancang khusus untuk efisiensi 
+tinggi pada perangkat mobile dan edge dengan 
+keterbatasan 
+komputasi. 
+Arsitektur 
+ini 
+menggabungkan beberapa inovasi kunci: (1) 
+Depthwise Separable Convolution: mengurangi 
+jumlah 
+parameter 
+dengan 
+memisahkan 
+konvolusi spasial dari konvolusi lintas-channel; 
+(2) Inverted Residual Blocks: menggunakan 
+ekspansi fitur yang diikuti kontraksi untuk 
+efisiensi; (3) Linear Bottleneck: menghapus 
+nonlinearitas 
+di 
+output 
+bottleneck 
+untuk 
+melestarikan informasi [7]. 
+Secara kuantitatif, MobileNetV2 mencapai 
+akurasi top-1 71.3% pada ImageNet dengan 
+hanya 3.5 juta parameter, dibandingkan dengan 
+ResNet yang memerlukan parameter jauh lebih 
+banyak. Latensi inferensi MobileNetV2 juga 
+signifikan lebih rendah, membuatnya cocok 
+untuk aplikasi real-time. Dalam konteks plant 
+disease detection dan plant leaf classification, 
+studi-studi 
+terbaru 
+menunjukkan 
+bahwa 
+MobileNetV2 memberikan trade-off yang sangat 
+baik antara akurasi dan efisiensi komputasi. 
+MobileNetV2 
+dipilih 
+karena 
+memiliki 
+jumlah parameter yang relatif kecil dibandingkan 
+arsitektur CNN modern lainnya. Dengan sekitar 
+3,5 juta parameter, MobileNetV2 mampu 
+menghasilkan performa klasifikasi yang tinggi 
+dengan kebutuhan komputasi yang lebih rendah. 
+Karakteristik tersebut menjadikan MobileNetV2 
+sesuai untuk implementasi pada perangkat 
+dengan sumber daya terbatas serta aplikasi 
+klasifikasi citra secara real-time. 
+ 
+III. METODE 
+A. Desain Sistem 
+ 
+Gambar 3.1 Desain Sistem  
+Desain 
+sistem 
+pada 
+penelitian 
+ini 
+menggambarkan alur proses klasifikasi tingkat 
+kematangan daun ketapang (Terminalia catappa) 
+menggunakan metode transfer learning. Sistem 
+dirancang dalam bentuk pipeline yang terstruktur 
+mulai dari proses pengumpulan dataset hingga 
+menghasilkan model klasifikasi yang mampu 
+mengidentifikasi tingkat kematangan daun 
+secara otomatis. 
+Gambar 
+3.1 
+menunjukkan 
+rancangan 
+sistem yang digunakan dalam penelitian. Proses 
+diawali dengan pengumpulan dataset daun 
+ketapang yang terdiri atas tiga kelas, yaitu daun 
+muda, daun menguning, dan daun tua. Dataset 
+kemudian melalui tahap preprocessing dan 
+augmentasi data sebelum dipisahkan menjadi 
+data pelatihan (training set) dan data validasi 
+(validation set). 
+Selanjutnya 
+dilakukan 
+pengujian 
+menggunakan tiga skenario eksperimen, yaitu 
+MobileNetV2 
+sebagai 
+feature 
+extractor, 
+MobileNetV2 dengan metode partial fine-
+tuning, 
+dan 
+ResNet50 
+sebagai 
+model 
+pembanding. 
+Hasil 
+dari 
+setiap 
+skenario 
+dievaluasi 
+menggunakan 
+beberapa 
+metrik 
+performa, yaitu accuracy, precision, recall, F1-
+score, dan confusion matrix. Model dengan 
+performa terbaik kemudian digunakan sebagai 
+sistem klasifikasi tingkat kematangan daun 
+ketapang [8]. 
+B. Dataset dan Akuisisi Data 
+Dataset yang digunakan dalam penelitian 
+ini terdiri dari sekitar 2.418 citra daun ketapang 
+(Terminalia catappa) yang diperoleh secara 
+mandiri melalui proses pengambilan gambar 
+langsung di lapangan. Seluruh citra diambil 
+pada 
+kondisi 
+pencahayaan 
+alami 
+untuk 
+memperoleh variasi karakteristik visual yang 
+mendekati kondisi penggunaan sebenarnya. 
+Proses 
+akuisisi 
+data 
+dilakukan 
+menggunakan tiga perangkat smartphone yang 
+berbeda, yaitu: 
+Tabel 3.1 Spesifikasi Perangkat Akuisisi Dataset 
+Parameter 
+Samsung 
+Galaxy 
+A50s 
+Samsung 
+Galaxy 
+A33 5G 
+Realme 
+12 5G 
+Resolusi 
+Kamera 
+Utama 
+48 MP 
+48 MP 
+108 MP 
+(Mode 
+Standar 
+48 MP) 
+Aperture 
+f/2.0 
+f/1.8 
+f/1.75 
+Panjang 
+Fokus 
+26 mm 
+26 mm 
+24 mm 
+Format Citra 
+JPEG 
+/ 
+JPG 
+JPEG 
+/ 
+JPG 
+JPEG 
+/ 
+JPG 
+Kondisi 
+Pengambilan 
+Outdoor 
+Outdoor 
+Outdoor 
+Jarak Objek 
+15–25 cm 
+15–25 cm 
+15–25 cm 
+Penggunaan tiga perangkat yang berbeda 
+bertujuan untuk meningkatkan keberagaman 
+karakteristik citra yang diperoleh selama proses 
+pengumpulan dataset. Perbedaan sensor kamera, 
+aperture, dan karakteristik pemrosesan citra pada 
+masing-masing perangkat menghasilkan variasi 
+warna, kontras, dan pencahayaan yang berbeda. 
+Dengan demikian, model yang dilatih diharapkan 
+memiliki kemampuan generalisasi yang lebih 
+baik terhadap variasi data yang ditemui pada 
+kondisi nyata. 
+Pembagian dataset dilakukan menggunakan 
+rasio 80% untuk data pelatihan dan 20% untuk 
+data validasi dengan nilai random seed sebesar 42 
+untuk menjaga konsistensi hasil eksperimen [9]. 
+C. Preprocessing dan Augmentasi Data 
+Tahap 
+preprocessing 
+dilakukan 
+untuk 
+memastikan seluruh citra memiliki format yang 
+sesuai dengan kebutuhan model deep learning. 
+Seluruh gambar diubah ukurannya menjadi 
+224×224 piksel menggunakan metode interpolasi 
+bilinear 
+agar 
+kompatibel 
+dengan 
+dimensi 
+masukan MobileNetV2 [10]. 
+Setelah 
+proses 
+resizing, 
+dilakukan 
+normalisasi 
+menggunakan 
+fungsi 
+preprocess_input bawaan MobileNetV2. Fungsi 
+ini mengubah rentang nilai piksel dari [0,255] 
+menjadi [-1,1] sehingga proses pelatihan model 
+menjadi lebih stabil dan konvergensi dapat 
+dicapai lebih cepat. 
+Untuk 
+meningkatkan 
+kemampuan 
+generalisasi model serta mengurangi risiko 
+overfitting, diterapkan teknik augmentasi data 
+secara dinamis selama proses pelatihan. Teknik 
+augmentasi yang digunakan meliputi random 
+horizontal flip, random vertical flip, random 
+rotation dengan faktor 0,3, random zoom sebesar 
+20%, random brightness sebesar 20%, dan 
+random contrast sebesar 20% [11]. 
+Penerapan 
+augmentasi 
+memungkinkan 
+model memperoleh variasi citra yang lebih 
+beragam tanpa perlu melakukan pengambilan 
+data tambahan secara langsung di lapangan. 
+D. Konfigurasi Transfer Learning dan Skenario 
+Eksperimen 
+Tabel 3.2 Skenario beberapa Arsitektur 
+Skenario 
+Arsitektur 
+Strategi 
+Pelatihan 
+Learning 
+Rate 
+A 
+MobileNetV2 
+Feature 
+Extractor 
+(Frozen Layer) 
+1×10⁻³ 
+B 
+MobileNetV2 
+Partial 
+Fine-
+Tuning 
+(Unfreeze Top 
+30 Layer) 
+1×10⁻⁴ 
+C 
+ResNet50 
+Fine-Tuning 
+(Unfreeze Top 
+30 Layer) 
+1×10⁻⁵ 
+Penelitian ini menggunakan tiga skenario 
+eksperimen yang berbeda untuk mengevaluasi 
+pengaruh 
+strategi 
+transfer 
+learning 
+dan 
+pemilihan 
+arsitektur 
+terhadap 
+performa 
+klasifikasi tingkat kematangan daun ketapang. 
+Perbedaan utama dari setiap skenario terletak 
+pada mekanisme pelatihan, jumlah lapisan yang 
+dilatih ulang, serta nilai learning rate yang 
+digunakan selama proses optimasi model. 
+1. Skenario A: MobileNetV2 Feature 
+Extractor 
+Skenario 
+A 
+digunakan 
+sebagai 
+baseline penelitian dengan memanfaatkan 
+MobileNetV2 sebagai feature extractor. 
+Pada skenario ini seluruh lapisan dasar 
+(base layer) MobileNetV2 yang telah 
+dilatih menggunakan dataset ImageNet 
+dibekukan (frozen) sehingga bobot model 
+tidak mengalami perubahan selama proses 
+pelatihan. Pelatihan hanya dilakukan pada 
+lapisan klasifikasi yang ditambahkan pada 
+bagian akhir jaringan. 
+Pendekatan 
+ini 
+bertujuan 
+untuk 
+mengukur 
+kemampuan 
+fitur 
+bawaan 
+MobileNetV2 
+dalam 
+mengenali 
+karakteristik visual daun ketapang tanpa 
+melakukan penyesuaian terhadap bobot 
+backbone 
+model. 
+Optimasi 
+model 
+dilakukan menggunakan algoritma Adam 
+dengan learning rate sebesar 1×10⁻³. 
+2. Skenario B: MobileNetV2 Partial 
+Fine-Tuning 
+Skenario B merupakan konfigurasi 
+utama yang digunakan dalam penelitian ini. 
+Berbeda dengan Skenario A, pendekatan 
+yang diterapkan adalah partial fine-tuning 
+dengan membuka kembali 30 lapisan 
+terakhir MobileNetV2 untuk dilatih ulang 
+menggunakan dataset daun ketapang [12]. 
+Proses pelatihan dilakukan dalam dua 
+tahap. 
+Tahap 
+pertama 
+menggunakan 
+MobileNetV2 sebagai feature extractor 
+dengan 
+seluruh 
+lapisan 
+backbone 
+dibekukan. 
+Setelah 
+model 
+mencapai 
+kondisi stabil, 30 lapisan terakhir dibuka 
+kembali (unfreeze) dan dilakukan proses 
+fine-tuning menggunakan learning rate 
+sebesar 1×10⁻⁴. 
+Strategi ini memungkinkan model 
+mempertahankan kemampuan ekstraksi fitur 
+umum dari ImageNet sekaligus beradaptasi 
+dengan karakteristik visual spesifik daun 
+ketapang. 
+3. Skenario C: ResNet50 Fine-Tuning 
+Skenario C digunakan sebagai model 
+pembanding 
+dengan 
+memanfaatkan 
+arsitektur ResNet50. Pemilihan ResNet50 
+dilakukan karena arsitektur ini memiliki 
+jumlah parameter yang lebih besar dan 
+sering digunakan pada berbagai penelitian 
+klasifikasi citra [13]. 
+Proses 
+pelatihan 
+dilakukan 
+menggunakan dua tahap yang serupa dengan 
+Skenario B. Pada tahap pertama seluruh 
+lapisan backbone dibekukan dan hanya 
+classifier head yang dilatih. Selanjutnya 30 
+lapisan terakhir ResNet50 dibuka kembali 
+untuk dilakukan fine-tuning menggunakan 
+learning rate sebesar 1×10⁻⁵. 
+Pada 
+seluruh 
+skenario 
+eksperimen 
+digunakan struktur classifier head yang sama 
+untuk menjaga konsistensi proses perbandingan 
+model. Classifier head terdiri atas lapisan Global 
+Average Pooling, Dense Layer dengan 128 
+neuron dan fungsi aktivasi ReLU, serta Dense 
+Output Layer dengan tiga neuron dan fungsi 
+aktivasi Softmax untuk menghasilkan prediksi 
+kelas daun muda, daun menguning, dan daun tua. 
+ 
+IV. HASIL DAN PEMBAHASAN 
+A. Hasil Pelatihan Model 
+Proses 
+pelatihan 
+model 
+dilakukan 
+menggunakan 
+pendekatan 
+transfer 
+learning 
+dengan tiga skenario eksperimen yang berbeda, 
+yaitu MobileNetV2 sebagai Feature Extractor 
+(Skenario A), MobileNetV2 dengan Partial Fine-
+Tuning (Skenario B), dan ResNet50 Fine-Tuning 
+sebagai model pembanding (Skenario C). 
+Setiap skenario menggunakan mekanisme 
+Early Stopping dengan parameter patience 
+sebesar 7 epoch untuk memantau nilai validation 
+accuracy. Apabila tidak terjadi peningkatan 
+akurasi selama 7 epoch berturut-turut, proses 
+pelatihan dihentikan secara otomatis untuk 
+mencegah terjadinya overfitting. 
+ 
+ 
+Tabel 4.1 Perbandingan Hasil Pelatihan dan Konvergensi 
+Multi-Skenario 
+Parameter 
+Eksperime
+n 
+Skenario A 
+(Feature 
+Extractor) 
+Skenario B 
+(Partial 
+Fine-
+Tuning) 
+Skenario 
+C 
+(ResNet5
+0 
+Fine-
+Tuning) 
+Arsitektur 
+Jaringan 
+MobileNet
+V2 
+MobileNet
+V2 
+ResNet50 
+Kondisi 
+Layer Base 
+Frozen (154 
+Layer) 
+Unfreeze 
+Top 
+30 
+Layer 
+Unfreeze 
+Top 
+30 
+Layer 
+Learning 
+Rate 
+1×10⁻³ 
+1×10⁻³ 
+→ 
+1×10⁻⁴ 
+1×10⁻³ → 
+1×10⁻⁵ 
+Jumlah 
+Fase 
+Pelatihan 
+1 Fase 
+2 Fase 
+2 Fase 
+Epoch 
+Konvergen
+si 
+11 Epoch 
+26 Epoch 
+20 Epoch 
+Validation 
+Loss 
+0,0200 
+0,0027 
+0,0012 
+Validation 
+Accuracy 
+99,79% 
+100,00% 
+100,00% 
+Berdasarkan 
+Tabel 
+4.1, 
+Skenario 
+B 
+menghasilkan performa terbaik dengan nilai 
+validation accuracy sebesar 100,00% dan 
+validation loss sebesar 0,0027. Hasil tersebut 
+menunjukkan bahwa penerapan Partial Fine-
+Tuning pada 30 lapisan terakhir MobileNetV2 
+mampu meningkatkan kemampuan model 
+dalam mengenali karakteristik visual daun 
+ketapang dibandingkan pendekatan Feature 
+Extractor. 
+Skenario 
+A 
+menghasilkan 
+validation 
+accuracy sebesar 99,79%. Meskipun seluruh 
+lapisan backbone dibekukan, performa yang 
+diperoleh 
+tetap 
+sangat 
+tinggi. 
+Hal 
+ini 
+menunjukkan bahwa fitur dasar yang dipelajari 
+MobileNetV2 dari dataset ImageNet masih 
+relevan untuk digunakan pada klasifikasi tingkat 
+kematangan daun ketapang. 
+Sementara 
+itu, 
+Skenario 
+C 
+yang 
+menggunakan 
+ResNet50 
+juga 
+mencapai 
+validation accuracy sebesar 100,00%. Namun, 
+arsitektur ini membutuhkan jumlah parameter 
+dan waktu komputasi yang lebih besar 
+dibandingkan MobileNetV2. Oleh karena itu, 
+MobileNetV2 dengan strategi Partial Fine-
+Tuning dipilih sebagai model utama karena 
+memberikan 
+keseimbangan 
+terbaik 
+antara 
+akurasi dan efisiensi komputasi [14]. 
+B. Evaluasi Model 
+Model terbaik yang diperoleh dari Skenario 
+B selanjutnya dievaluasi menggunakan data 
+validasi yang telah dipisahkan secara otomatis 
+sebesar 20% dari total dataset. Evaluasi 
+dilakukan menggunakan metrik precision, recall, 
+dan F1-score untuk mengukur kemampuan model 
+dalam melakukan klasifikasi pada setiap kelas 
+daun. 
+Tabel 4. 2 Hasil Evaluasi Model pada Data Validasi 
+Kelas Daun 
+Precision 
+Recall 
+F1-
+Score 
+Support 
+Daun Muda 
+100% 
+100% 
+100% 
+151 
+Daun 
+Menguning 
+100% 
+100% 
+100% 
+158 
+Daun Tua 
+100% 
+100% 
+100% 
+174 
+Rata-rata 
+100% 
+100% 
+100% 
+483 
+Berdasarkan Tabel 4.2, model berhasil 
+mengklasifikasikan seluruh data validasi dengan 
+sangat baik. Nilai precision, recall, dan F1-score 
+mencapai 100% pada seluruh kelas, menunjukkan 
+bahwa model mampu mengenali setiap kategori 
+daun secara konsisten tanpa menunjukkan 
+kecenderungan bias terhadap salah satu kelas 
+tertentu. 
+Jumlah data validasi yang digunakan terdiri 
+dari 151 citra daun muda, 158 citra daun 
+menguning, dan 174 citra daun tua. Seluruh data 
+tersebut tidak pernah digunakan selama proses 
+pelatihan sehingga dapat digunakan untuk 
+mengevaluasi 
+kemampuan 
+model 
+dalam 
+melakukan prediksi pada data yang belum pernah 
+dilihat sebelumnya. 
+Keberhasilan 
+model 
+dalam 
+mencapai 
+performa tinggi dipengaruhi oleh perbedaan 
+karakteristik visual antar kelas yang cukup jelas. 
+Daun muda didominasi warna hijau, daun 
+menguning menunjukkan fase transisi antara 
+hijau dan kuning, sedangkan daun tua memiliki 
+warna cokelat kemerahan yang lebih dominan 
+[15], [16]. 
+Meskipun model mencapai akurasi yang 
+sangat tinggi pada data validasi, hasil tersebut 
+tetap perlu diinterpretasikan secara hati-hati. 
+Tingginya performa dapat dipengaruhi oleh 
+distribusi data yang relatif seimbang serta 
+karakteristik visual yang cukup berbeda antar 
+kelas. Oleh karena itu, pengujian pada dataset 
+eksternal dengan kondisi lingkungan yang lebih 
+beragam masih diperlukan untuk mengevaluasi 
+kemampuan generalisasi model secara lebih luas. 
+C. Analisis Confusion Matrix 
+ Analisis confusion matrix dilakukan untuk 
+mengetahui distribusi prediksi yang dihasilkan 
+oleh model pada setiap kelas daun. Selain 
+digunakan untuk mengukur jumlah prediksi 
+yang benar, confusion matrix juga dapat 
+menunjukkan pola kesalahan klasifikasi yang 
+terjadi 
+pada 
+masing-masing 
+skenario 
+eksperimen [17]. 
+Tabel 4.3.1 Confusion Matrix Skenario A (Feature 
+Extractor) 
+Aktual 
+/ 
+Prediksi 
+Daun 
+Muda 
+Daun 
+Menguning 
+Daun 
+Tua 
+Daun Muda 
+151 
+0 
+0 
+Daun 
+Menguning 
+0 
+158 
+0 
+Daun Tua 
+0 
+1 
+173 
+Tabel 4.3. 2 Confusion Matrix Skenario B (Partial Fine-
+Tuning) 
+Aktual 
+/ 
+Prediksi 
+Daun 
+Muda 
+Daun 
+Menguning 
+Daun 
+Tua 
+Daun Muda 
+151 
+0 
+0 
+Daun 
+Menguning 
+0 
+158 
+0 
+Daun Tua 
+0 
+0 
+174 
+Tabel 4.3.3 Confusion Matrix Skenario C (ResNet50 
+Fine-Tuning) 
+Aktual 
+/ 
+Prediksi 
+Daun 
+Muda 
+Daun 
+Menguning 
+Daun 
+Tua 
+Daun Muda 
+151 
+0 
+0 
+Daun 
+Menguning 
+0 
+158 
+0 
+Daun Tua 
+0 
+0 
+174 
+Pada Skenario A ditemukan satu kesalahan 
+klasifikasi, yaitu satu citra daun tua yang 
+diprediksi sebagai daun menguning. Kesalahan 
+ini menunjukkan bahwa tanpa proses fine-
+tuning, model masih mengalami kesulitan dalam 
+membedakan beberapa karakteristik visual yang 
+berada pada fase transisi kematangan daun. 
+Sebaliknya, Skenario B dan Skenario C 
+berhasil 
+mengklasifikasikan 
+seluruh 
+data 
+validasi dengan benar sehingga menghasilkan 
+akurasi 
+sebesar 
+100%. 
+Hasil 
+tersebut 
+menunjukkan 
+bahwa 
+proses 
+fine-tuning 
+memberikan kontribusi yang signifikan dalam 
+meningkatkan 
+kemampuan 
+model 
+untuk 
+mengenali fitur spesifik yang terdapat pada daun 
+ketapang. 
+ 
+D. Komparasi dengan Penelitian Terdahulu 
+Untuk 
+mengetahui 
+posisi 
+penelitian 
+terhadap penelitian sebelumnya, dilakukan 
+komparasi dengan beberapa penelitian yang 
+menggunakan pendekatan deep learning pada 
+permasalahan klasifikasi citra daun. 
+menunjukkan 
+bahwa 
+MobileNetV2 
+merupakan salah satu arsitektur yang banyak 
+digunakan 
+pada 
+berbagai 
+permasalahan 
+klasifikasi citra daun dan tanaman. Pada 
+penelitian ini, MobileNetV2 dikombinasikan 
+dengan strategi Partial Fine-Tuning pada 30 
+lapisan terakhir untuk meningkatkan kemampuan 
+model dalam mengenali karakteristik visual daun 
+ketap 
+ 
+V. KESIMPULAN 
+Penelitian ini berhasil mengembangkan 
+sistem klasifikasi tingkat kematangan daun 
+ketapang (Terminalia catappa) berbasis citra 
+digital menggunakan metode transfer learning. 
+Sistem 
+yang 
+dibangun 
+mampu 
+mengklasifikasikan daun ketapang ke dalam tiga 
+kategori, yaitu daun muda, daun menguning, dan 
+daun tua berdasarkan karakteristik visual yang 
+terdapat pada citra. 
+Untuk memperoleh konfigurasi model yang 
+optimal, dilakukan pengujian menggunakan tiga 
+skenario eksperimen, yaitu MobileNetV2 sebagai 
+Feature Extractor, MobileNetV2 dengan Partial 
+Fine-Tuning, dan ResNet50 sebagai model 
+pembanding. Hasil pengujian menunjukkan 
+bahwa strategi Partial Fine-Tuning pada 30 
+lapisan 
+terakhir 
+MobileNetV2 
+memberikan 
+performa terbaik dengan validation accuracy 
+mencapai 100,00% dan validation loss sebesar 
+0,0027. Sementara itu, Skenario A menghasilkan 
+validation accuracy sebesar 99,79%, sedangkan 
+Skenario C menggunakan ResNet50 juga 
+mencapai 100,00%. 
+Penelitia
+n 
+Objek 
+Metode 
+Hasil 
+Klasifikas
+i Daun 
+Ecoprint  
+Klasifikasi 
+daun 
+ecoprint 
+MobileNetV
+2 
+& 
+ResNet50 
+Klasifikasi 
+daun 
+menggunaka
+n 
+transfer 
+learning 
+(Jutif) 
+dentifikas
+i Penyakit 
+Tanama 
+Penyakit 
+daun 
+tanaman 
+MobileNetV
+2 
+Akurasi 
+tinggi untuk 
+deteksi 
+penyakit 
+daun 
+(Webology) 
+Deteksi 
+Penyakit 
+Daun 
+Penyakit 
+tanaman 
+Improved 
+MobileNetV
+2 
+Akurasi 
+99,53% 
+(PMC) 
+Penelitian 
+yang 
+sedang 
+dilakukan
+. 
+Kematanga
+n 
+Daun 
+Ketapang 
+MobileNetV
+2 + Partial 
+Fine-Tuning 
+99,79%–
+100,00% 
+Tabel 4. 3 Komparasi dengan Penelitian Terdahulu 
+Hasil evaluasi terhadap data validasi 
+menunjukkan bahwa model terbaik mampu 
+mencapai nilai precision, recall, dan F1-score 
+sebesar 100% pada seluruh kelas daun. Analisis 
+confusion matrix menunjukkan bahwa model 
+mampu melakukan klasifikasi secara konsisten 
+dengan tingkat kesalahan yang sangat rendah. 
+Hasil tersebut menunjukkan bahwa penerapan 
+transfer learning menggunakan MobileNetV2 
+dengan strategi Partial Fine-Tuning efektif 
+untuk mengenali tingkat kematangan daun 
+ketapang berdasarkan citra digital. 
+Selain menghasilkan performa yang sangat 
+baik, MobileNetV2 juga memiliki kebutuhan 
+komputasi yang relatif ringan dibandingkan 
+ResNet50. 
+Dengan 
+demikian, 
+arsitektur 
+MobileNetV2 
+dinilai 
+lebih 
+efisien 
+dan 
+berpotensi untuk diterapkan pada sistem 
+klasifikasi berbasis perangkat bergerak maupun 
+aplikasi berbasis web. 
+ 
+REFERENSI 
+[1] 
+F. Zhuang et al., “A Comprehensive 
+Survey 
+on 
+Transfer 
+Learning,” 
+Proceedings of the IEEE, vol. 109, no. 1, 
+pp. 
+43–76, 
+Jan. 
+2021, 
+doi: 
+10.1109/JPROC.2020.3004555. 
+[2] 
+J. Lu, X. Liu, X. Ma, J. Tong, and J. 
+Peng, “Improved MobileNetV2 crop 
+disease 
+identification 
+model 
+for 
+intelligent agriculture,” PeerJ Comput. 
+Sci., vol. 9, p. e1595, Sep. 2023, doi: 
+10.7717/peerj-cs.1595. 
+[3] 
+H. 
+dac 
+Hung 
+et 
+al., 
+“Chemical 
+constituents 
+from 
+the 
+leaves 
+of 
+Terminalia catappa L. (Combretaceae),” 
+Vietnam J. Sci. Technol., vol. 60, no. 4, 
+pp. 
+625–630, 
+Aug. 
+2022, 
+doi: 
+10.15625/2525-2518/15972. 
+[4] 
+C. Shorten and T. M. Khoshgoftaar, “A 
+survey on Image Data Augmentation for 
+Deep Learning,” J. Big Data, vol. 6, no. 
+1, 
+p. 
+60, 
+Dec. 
+2019, 
+doi: 
+10.1186/s40537-019-0197-0. 
+[5] 
+A. Perko, O. Trapp, E. Maul, F. Röckel, 
+A. Piltaver, and S. Vršič, “Monitoring 
+and Genotyping of Wild Grapevine 
+(Vitis vinifera L. subsp. sylvestris) in 
+Slovenia,” Plants, vol. 13, no. 9, p. 1234, 
+Apr. 
+2024, 
+doi: 
+10.3390/plants13091234. 
+[6] 
+K. Cheng, S. Gao, W. Dong, X. Yang, Q. 
+Wang, and H. Yu, “Boosting label 
+weighted extreme learning machine for 
+classifying multi-label imbalanced data,” 
+Neurocomputing, vol. 403, pp. 360–370, 
+Aug. 
+2020, 
+doi: 
+10.1016/j.neucom.2020.04.098. 
+[7] 
+D. B. V. T. Devvret Verma, “Plant Leaf 
+Disease Detection Using Mobilenetv2,” 
+Webology, pp. 3241–3246, 2021, doi: 
+10.29121/WEB/V18I5/60. 
+[8] 
+S. Hajar, M. Murinto, and A. Yudhana, 
+“Comparison 
+of 
+Transfer 
+Learning 
+Strategies 
+Using 
+MobileNetV2 
+and 
+ResNet50 
+for 
+Ecoprint 
+Leaf 
+Classification,” Jurnal Teknik Informatika 
+(Jutif), vol. 6, no. 5, pp. 3251–3264, Oct. 
+2025, 
+doi: 
+10.52436/1.jutif.2025.6.5.5266. 
+[9] 
+Y. Huang, D. Ye, J. Yang, W. Zhu, L. Li, 
+and Y. Ding, “Dual recognition elements 
+for 
+selective 
+determination 
+of 
+progesterone 
+based 
+on 
+molecularly 
+imprinted electrochemical aptasensor,” 
+Anal. Chim. Acta, vol. 1264, p. 341288, 
+Jul. 
+2023, 
+doi: 
+10.1016/j.aca.2023.341288. 
+[10] 
+D. B. , V. T. Devvret Verma, “Plant Leaf 
+Disease Detection Using Mobilenetv2,” 
+Webology, pp. 3241–3246, 2021, doi: 
+10.29121/WEB/V18I5/60. 
+[11] 
+A. 
+Buslaev, 
+V. 
+I. 
+Iglovikov, 
+E. 
+Khvedchenya, A. Parinov, M. Druzhinin, 
+and A. A. Kalinin, “Albumentations: Fast 
+and Flexible Image Augmentations,” 
+Information, vol. 11, no. 2, p. 125, Feb. 
+2020, doi: 10.3390/info11020125. 
+[12] 
+J. Ahmmed, M. Rana, F. Ahmed, M. 
+Hasan, and R. Hasan Shohan, “Fine-
+Tuned CNN-Based Approach for Multi-
+Class Mango Leaf Disease Detection.” 
+[13] 
+S. Hajar, M. Murinto, and A. Yudhana, 
+“Comparison 
+of 
+Transfer 
+Learning 
+Strategies 
+Using 
+MobileNetV2 
+and 
+ResNet50 
+for 
+Ecoprint 
+Leaf 
+Classification,” Jurnal Teknik Informatika 
+(Jutif), vol. 6, no. 5, pp. 3251–3264, Oct. 
+2025, 
+doi: 
+10.52436/1.jutif.2025.6.5.5266. 
+[14] 
+D. 
+M. 
+W. 
+Powers 
+and 
+Ailab, 
+“EVALUATION: FROM PRECISION, 
+RECALL AND F-MEASURE TO ROC, 
+INFORMEDNESS, MARKEDNESS & 
+CORRELATION.” 
+[15] 
+K. He, X. Zhang, S. Ren, and J. Sun, 
+“Deep Residual Learning for Image 
+Recognition,” in 2016 IEEE Conference 
+on 
+Computer 
+Vision 
+and 
+Pattern 
+Recognition (CVPR), IEEE, Jun. 2020, pp. 
+770–778. doi: 10.1109/CVPR.2016.90. 
+[16] 
+W. Jin, H. Zhang, and Z. Ming, “Optimal 
+bipartite consensus for discrete-time 
+multi-agent systems with event-triggered 
+mechanism based on adaptive dynamic 
+programming,” Neurocomputing, vol. 
+564, p. 126965, Jan. 2024, doi: 
+10.1016/j.neucom.2023.126965. 
+[17] 
+G. Zeng, “Invariance Properties and 
+Evaluation Metrics Derived from the 
+Confusion 
+Matrix 
+in 
+Multiclass 
+Classification,” Mathematics, vol. 13, 
+no. 16, p. 2609, Aug. 2025, doi: 
+10.3390/math13162609. 
+  

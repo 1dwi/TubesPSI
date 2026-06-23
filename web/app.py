@@ -102,86 +102,6 @@ def preprocess_image(image_path):
     return np.expand_dims(np.array(img), axis=0).astype('float32')
 
 
-def compute_gradcam(img_array, model, class_idx):
-    """Compute Grad-CAM heatmap overlay (returns base64 JPEG string).
-    
-    Referensi:
-        Selvaraju, R.R., et al. (2017). Grad-CAM: Visual Explanations from Deep Networks
-        via Gradient-based Localization. ICCV 2017. https://arxiv.org/abs/1610.02391
-    """
-    import traceback
-    try:
-        # Find the MobileNetV2 Functional sub-model (skip Sequential like data_augmentation)
-        base_model = None
-        for layer in model.layers:
-            if isinstance(layer, keras.Model) and not isinstance(layer, keras.Sequential):
-                base_model = layer
-                break
-        if base_model is None:
-            print("⚠️ Grad-CAM: No Functional sub-model found")
-            return None
-
-        # Create a modified base model that outputs BOTH conv features and final features
-        last_conv = base_model.get_layer('out_relu')
-        base_grad = keras.Model(
-            inputs=base_model.input,
-            outputs=[last_conv.output, base_model.output]
-        )
-
-        # Rebuild the full pipeline, substituting base_model with base_grad
-        inp = model.input
-        x = inp
-        conv_out = None
-        for layer in model.layers[1:]:
-            if layer is base_model:
-                conv_out, x = base_grad(x, training=False)
-            else:
-                x = layer(x, training=False)
-
-        grad_model = keras.Model(inputs=inp, outputs=[conv_out, x])
-
-        # Forward pass + gradient computation
-        img_tensor = tf.cast(img_array, tf.float32)
-        with tf.GradientTape() as tape:
-            conv_output, predictions = grad_model(img_tensor, training=False)
-            tape.watch(conv_output)
-            class_score = predictions[:, class_idx]
-
-        grads = tape.gradient(class_score, conv_output)
-        if grads is None:
-            print("⚠️ Grad-CAM: Gradients are None")
-            return None
-
-        # Pool gradients over spatial dimensions
-        pooled = tf.reduce_mean(grads, axis=(0, 1, 2))
-        heatmap = tf.reduce_sum(conv_output[0] * pooled, axis=-1)
-        heatmap = tf.maximum(heatmap, 0)
-        max_val = tf.reduce_max(heatmap)
-        if max_val > 0:
-            heatmap = heatmap / max_val
-        heatmap = heatmap.numpy()
-
-        # Resize and colorize heatmap
-        heatmap_resized = cv2.resize(heatmap, (IMG_SIZE, IMG_SIZE))
-        heatmap_uint8 = np.uint8(255 * heatmap_resized)
-        colormap = cv2.applyColorMap(heatmap_uint8, cv2.COLORMAP_JET)
-
-        # Overlay on original image
-        original = np.uint8(img_array[0])
-        original_bgr = cv2.cvtColor(original, cv2.COLOR_RGB2BGR)
-        overlay = cv2.addWeighted(original_bgr, 0.55, colormap, 0.45, 0)
-
-        # Encode to base64 JPEG
-        _, buffer = cv2.imencode('.jpg', overlay, [cv2.IMWRITE_JPEG_QUALITY, 90])
-        b64 = base64.b64encode(buffer).decode('utf-8')
-        return f"data:image/jpeg;base64,{b64}"
-
-    except Exception as e:
-        print(f"⚠️ Grad-CAM error: {e}")
-        traceback.print_exc()
-        return None
-
-
 def detect_leaf_bbox(image_path):
     """Mendeteksi kontur daun Ketapang dan mengembalikan bounding box ternormalisasi (0-1)"""
     try:
@@ -194,9 +114,9 @@ def detect_leaf_bbox(image_path):
         # Convert to HSV untuk segmentasi warna
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         
-        # --- Exclude warna kulit (skin tone) ---
-        lower_skin = np.array([0, 20, 70])
-        upper_skin = np.array([20, 150, 255])
+        # --- Exclude warna kulit (skin tone) --- dipersempit agar daun tua cokelat tidak ikut terbuang
+        lower_skin = np.array([5, 30, 100])
+        upper_skin = np.array([17, 140, 255])
         mask_skin = cv2.inRange(hsv, lower_skin, upper_skin)
         
         # Range warna hijau (daun muda/sedang)
@@ -204,18 +124,23 @@ def detect_leaf_bbox(image_path):
         upper_green = np.array([85, 255, 255])
         mask_green = cv2.inRange(hsv, lower_green, upper_green)
         
-        # Range warna cokelat/merah tua (daun tua ketapang - lebih spesifik, saturasi dinaikkan biar bantal ga masuk)
-        lower_brown = np.array([8, 100, 30])
-        upper_brown = np.array([22, 255, 200])
+        # Range warna cokelat/oranye (daun tua ketapang - diperlebar signifikan)
+        lower_brown = np.array([5, 50, 20])
+        upper_brown = np.array([25, 255, 220])
         mask_brown = cv2.inRange(hsv, lower_brown, upper_brown)
         
-        # Range merah gelap (daun sangat tua, saturasi tinggi)
-        lower_dred = np.array([0, 100, 30])
-        upper_dred = np.array([8, 255, 180])
+        # Range merah gelap (daun sangat tua/kering)
+        lower_dred = np.array([0, 50, 20])
+        upper_dred = np.array([8, 255, 200])
         mask_dred = cv2.inRange(hsv, lower_dred, upper_dred)
         
+        # Range kuning-cokelat muda (daun tua transisi)
+        lower_yellow = np.array([20, 40, 40])
+        upper_yellow = np.array([30, 255, 255])
+        mask_yellow = cv2.inRange(hsv, lower_yellow, upper_yellow)
+        
         # Gabungkan warna daun, lalu exclude kulit
-        mask_leaf = cv2.bitwise_or(mask_green, cv2.bitwise_or(mask_brown, mask_dred))
+        mask_leaf = cv2.bitwise_or(mask_green, cv2.bitwise_or(mask_brown, cv2.bitwise_or(mask_dred, mask_yellow)))
         mask = cv2.bitwise_and(mask_leaf, cv2.bitwise_not(mask_skin))
         
         # Cleaning noise (lebih agresif)
@@ -236,8 +161,8 @@ def detect_leaf_bbox(image_path):
             area = cv2.contourArea(c)
             area_ratio = area / total_area
             
-            # Skip terlalu kecil (<2% frame) atau terlalu besar (>60% frame)
-            if area_ratio < 0.02 or area_ratio > 0.60:
+            # Skip terlalu kecil (<1% frame) atau terlalu besar (>70% frame)
+            if area_ratio < 0.01 or area_ratio > 0.70:
                 continue
             
             x, y, w, h = cv2.boundingRect(c)
@@ -415,53 +340,6 @@ def predict():
     except Exception as e:
         return jsonify({'error': f'Terjadi kesalahan: {str(e)}'}), 500
 
-@app.route('/gradcam', methods=['POST'])
-def gradcam():
-    """Generate Grad-CAM heatmap for an image."""
-    if model is None:
-        return jsonify({'error': 'Model belum di-training'}), 503
-    try:
-        filename = f"{uuid.uuid4().hex}.jpg"
-        filepath = os.path.join(UPLOAD_FOLDER, filename)
-
-        if request.is_json:
-            data = request.json
-            if 'image' not in data:
-                return jsonify({'error': 'Tidak ada data gambar'}), 400
-            img_data = data['image']
-            if "base64," in img_data:
-                img_data = img_data.split("base64,")[1]
-            image_bytes = base64.b64decode(img_data)
-            image = Image.open(io.BytesIO(image_bytes))
-            image.save(filepath)
-        else:
-            if 'file' not in request.files:
-                return jsonify({'error': 'Tidak ada file'}), 400
-            file = request.files['file']
-            file.save(filepath)
-
-        img_array = preprocess_image(filepath)
-        predictions = model.predict(img_array, verbose=0)[0]
-        predicted_idx = int(np.argmax(predictions))
-        confidence = float(predictions[predicted_idx])
-
-        gradcam_img = compute_gradcam(img_array, model, predicted_idx)
-
-        # Cleanup
-        try: os.remove(filepath)
-        except: pass
-
-        if gradcam_img is None:
-            return jsonify({'error': 'Gagal membuat Grad-CAM'}), 500
-
-        return jsonify({
-            'success': True,
-            'gradcam_image': gradcam_img,
-            'predicted_class': class_names[predicted_idx],
-            'confidence': confidence
-        })
-    except Exception as e:
-        return jsonify({'error': f'Grad-CAM error: {str(e)}'}), 500
 
 @app.route('/health')
 def health():

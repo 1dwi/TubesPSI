@@ -1,0 +1,61 @@
+--- Hasil OpenAlex: Terminalia catappa fish ---
+- Title: The Effects of Terminalia catappa L. Leaves Extract on the Water Quality Properties, Survival and Blood Profile of Ornamental fish (Betta sp) Cultured (2016)
+  Author: Rudy Agung Nugroho ; Hetty Manurung ; Dewi Saraswati ; Deasy Ladyescha ; Firman M. Nur
+  DOI: https://doi.org/10.15294/biosaintifika.v8i2.6519
+---
+- Title: Acute toxicity of hot aqueous extract from leaves of the Terminalia catappa in juvenile fish Colossoma macropomum (2020)
+  Author: Juliana Oliveira Meneses ; Fernanda dos Santos Cunha ; Joel Artur Rodrigues Dias ; Ana Flávia Santos da Cunha ; Francisco José dos Santos ; Natalino da Costa Sousa ; Márcia Valéria Silva do Couto ; Peterson Emmanuel Guimarães Paixão ; Higo Andrade Abe ; Bruno dos Santos Lima ; Antônio Guilherme de Carvalho Neto ; Adriano Antunes de Souza Araújo ; Luiz Pereira da Costa ; Juliana Cordeiro Cardoso ; Rodrigo Yudi Fujimoto
+  DOI: https://doi.org/10.1007/s10499-020-00596-z
+---
+- Title: Potential application of extracts from Indian almond (Terminalia catappa Linn.) leaves in Siamese fighting fish (Betta splendens Regan) culture. (2012)
+  Author: Watchariya Purivirojkul
+  DOI: None
+---
+- Title: Recent advances of <i>Terminalia catappa</i> and its application in fish culture: A review (2024)
+  Author: Xu Wang ; Norhidayah Mohd Taufek ; Norhafiza Mohd Arshad
+  DOI: https://doi.org/10.1111/raq.12920
+---
+- Title: <i>Terminalia catappa</i> improves growth performance and survival of the Amazon leaf fish ( <i>Monocirrhus polyacanthus</i> ) larvae submitted to handling stress (2020)
+  Author: Fabrício Menezes Ramos ; Higo Andrade Abe ; Márcia Valéria Silva do Couto ; Peterson Emmanuel Guimarães Paixão ; Maurício Laterça Martins ; Paulo César Falanghe Carneiro ; Alexandre Nízio Maria ; Rodrigo Yudi Fujimoto
+  DOI: https://doi.org/10.1111/are.14783
+---
+- Title: Effect of dried Indian almond leaf (Terminalia catappa) on monogenean parasite of gold fish (Carassius auratus) (2005)
+  Author: Nantarika Chansue ; Jirasak Tangtrongpiros
+  DOI: None
+---
+- Title: Sensitivity of Fish Pathogenic Bacteria to Almond (Terminalia Catappa) Leaves and Bitter (Vernonia Amygdalina) Leaves Extracts (2019)
+  Author: Olusola Sunday Emmanuel
+  DOI: https://doi.org/10.23880/ijoac-16000158
+---
+- Title: Addition of different concentrations of Indian almond (Terminalia catappa) leaf extract to aquarium water resulted in improved water quality and increased bubble nest formation by male Siamese fighting fish (Betta splendens) without having any consistent negative effects on growth metrics and blood chemistry (2022)
+  Author: Saowalak Malawa ; Nutt Nuntapong ; Naraid Suanyuk ; Karun Thongprajukaew
+  DOI: https://doi.org/10.1007/s10499-022-00960-1
+---
+- Title: IMPROVEMENT OF WATER QUALITY AND BREEDING OF SIAMESE FIGHTING FISH (BETTA SPLENDENS REGAN) USING INDIAN ALMOND (TERMINALIA CATAPPA) LEAVES (2022)
+  Author: RANDY M. GALLANO ; MIGUEL D. VISCA
+  DOI: https://doi.org/10.56557/upjoz/2022/v43i42929
+---
+- Title: Understanding foraging practices in Lagos metropolis to redesign urban greenspaces in support of human-nature interactions (2022)
+  Author: Opeyemi Adeyemi ; Charlie M. Shackleton
+  DOI: https://doi.org/10.1016/j.ufug.2022.127805
+---
+- Title: THE EFFECTS OF Terminalia catappa LEAF EXTRACT ON THE HAEMATOLOGICAL PROFILE OF ORNAMENTAL FISH Betta splendens (2015)
+  Author: Rudy Agung Nugroho ; Dewi Saraswati
+  DOI: None
+---
+- Title: Color quality, behavioral response, and blood glucose levels of guppies Poecilia reticulata (Peters, 1859) with the addition of Indian almond leaves (Terminalia catappa) in fish containers (2022)
+  Author: Izhar Amirul Haq ; Kukuh Nirmala ; Yuni Puji Hastuti ; Eddy Supriyono
+  DOI: https://doi.org/10.32491/jii.v22i1.581
+---
+- Title: Antibacterial activity and toxicity of Indian Almond (Terminalia catappa) extract in Siamese Fighting Fish (Betta splendens Regan). (2006)
+  Author: Watchariya Purivirojkul ; Nontawith Areechon
+  DOI: None
+---
+- Title: <i>Terminalia catappa</i> L. extract improves survival, hematological profile and resistance to <i>Aeromonas hydrophila</i> in <i>Betta</i> sp. (2017)
+  Author: Rudy Agung Nugroho ; Hetty Manurung ; Firman M. Nur ; Widha Prahastika
+  DOI: https://doi.org/10.1515/aopf-2017-0010
+---
+- Title: Effect of Terminalia catappa methanol leaf extract on nonspecific innate immune responses and disease resistance of red hybrid tilapia against Streptococcus agalactiae (2020)
+  Author: Yahaya Yakubu ; Ahmad Muhammad Talba ; Chou Min Chong ; Intan Safinar Ismail ; Khozirah Shaari
+  DOI: https://doi.org/10.1016/j.aqrep.2020.100555
+---

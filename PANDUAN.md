@@ -314,7 +314,22 @@ Tekan `Ctrl + C` di terminal untuk menghentikan server.
 1. Klik tab **"📁 Upload Gambar"**
 2. Drag & drop foto, atau klik area upload
 3. Klik **"🔍 Analisis Daun"**
-4. Hasil muncul di bawah
+4. Hasil prediksi, grafik probabilitas, dan deskripsi daun akan muncul di bawah.
+
+### ⚖️ Compare Mode
+
+Fitur baru untuk membandingkan dua daun secara langsung:
+1. Klik tab **"⚖️ Compare Mode"**
+2. Upload gambar pertama di slot 1, dan gambar kedua di slot 2.
+3. Klik **"Bandingkan Sekarang"**
+4. Hasil perbandingan tingkat kematangan dari kedua daun akan muncul secara berdampingan.
+
+### 🔬 Grad-CAM Heatmap
+
+Kamu bisa melihat area daun mana yang paling fokus dilihat oleh AI (Deep Learning):
+1. Lakukan deteksi (bisa dari Live Camera atau Upload Gambar)
+2. Klik tombol **"🔬 Lihat Grad-CAM Heatmap"** di bagian hasil
+3. Akan muncul visualisasi heatmap: warna **merah** menandakan area yang sangat mempengaruhi keputusan AI.
 
 ### 📈 Statistik & Riwayat
 

@@ -83,7 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Init ---
     createParticles();
-    initChart();
     renderStats();
     renderHistory();
 
@@ -809,67 +808,7 @@ document.addEventListener('DOMContentLoaded', () => {
         glowEl.style.top = e.clientY + 'px';
     });
 
-    // --- Grad-CAM Logic ---
-    const gradcamModal = document.getElementById('gradcamModal');
-    const gradcamModalClose = document.getElementById('gradcamModalClose');
-    const gradcamImage = document.getElementById('gradcamImage');
 
-    const btnGradcamUpload = document.getElementById('btnGradcamUpload');
-
-    function showGradcamModal(imageSrc) {
-        gradcamImage.src = imageSrc;
-        gradcamModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-
-    function hideGradcamModal() {
-        gradcamModal.style.display = 'none';
-        document.body.style.overflow = '';
-    }
-
-    gradcamModalClose.addEventListener('click', hideGradcamModal);
-    gradcamModal.addEventListener('click', (e) => {
-        if (e.target === gradcamModal) hideGradcamModal();
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && gradcamModal.style.display === 'flex') hideGradcamModal();
-    });
-
-    async function requestGradcam(btn, imageData) {
-        const btnText = btn.querySelector('.btn-text');
-        const btnLoading = btn.querySelector('.btn-loading');
-        btnText.style.display = 'none';
-        btnLoading.style.display = 'inline-flex';
-        btn.disabled = true;
-
-        try {
-            const response = await fetch('/gradcam', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ image: imageData })
-            });
-            const data = await response.json();
-            if (data.success && data.gradcam_image) {
-                showGradcamModal(data.gradcam_image);
-            } else {
-                showError(data.error || 'Gagal membuat Grad-CAM');
-            }
-        } catch (err) {
-            showError('Gagal terhubung ke server untuk Grad-CAM');
-        } finally {
-            btnText.style.display = 'inline';
-            btnLoading.style.display = 'none';
-            btn.disabled = false;
-        }
-    }
-
-
-
-    // Grad-CAM from uploaded image
-    btnGradcamUpload.addEventListener('click', () => {
-        if (!previewImage.src || previewImage.src === '') return;
-        requestGradcam(btnGradcamUpload, previewImage.src);
-    });
 
     // --- Compare Mode Logic ---
     function setupCompareSlot(side, uploadArea, input, preview) {

@@ -193,14 +193,6 @@
                         <div class="prob-bars" id="probBars"></div>
                     </div>
 
-                    <!-- Grad-CAM Button -->
-                    <button class="btn-gradcam" id="btnGradcamUpload">
-                        <span class="btn-text">🔬 Lihat Grad-CAM Heatmap</span>
-                        <span class="btn-loading" style="display:none;"><span class="spinner"></span> Generating...</span>
-                    </button>
-                    <!-- Grad-CAM Result -->
-                    <div class="gradcam-result" id="gradcamResultUpload" style="display:none;"></div>
-
                         <!-- New Analysis Button -->
                         <button class="btn-new" id="btnNew">📸 Analisis Gambar Baru</button>
                     </div>
@@ -214,18 +206,6 @@
                 <span class="error-message" id="errorMessage"></span>
             </div>
 
-            <!-- Grad-CAM Modal -->
-            <div class="gradcam-modal" id="gradcamModal" style="display:none;">
-                <div class="gradcam-modal-content glass-card">
-                    <button class="gradcam-modal-close" id="gradcamModalClose">✕</button>
-                    <h3>🔬 Grad-CAM Heatmap</h3>
-                    <p class="gradcam-subtitle">Visualisasi area yang "dilihat" model saat prediksi.<br>Warna <strong style="color:#ff4444">merah</strong> = area paling berpengaruh, <strong style="color:#4444ff">biru</strong> = kurang berpengaruh.</p>
-                    <div class="gradcam-image-container">
-                        <img id="gradcamImage" src="" alt="Grad-CAM Heatmap">
-                    </div>
-                    <p class="gradcam-ref">Ref: Selvaraju et al., "Grad-CAM: Visual Explanations from Deep Networks" (ICCV 2017)</p>
-                </div>
-            </div>
         </main>
 
         <!-- Stats Dashboard -->

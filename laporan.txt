@@ -1,0 +1,1147 @@
+Klasifikasi Tingkat Kematangan Daun Ketapang (
+Terminalia
+ 
+catappa
+) Menggunakan Metode Transfer 
+Learning
+ dengan Arsitektur MobileNetV2
+Classification
+ 
+of
+ 
+Maturity
+ Level 
+of
+ Ketapang 
+Leaves
+ (
+Terminalia
+ 
+catappa
+) 
+Using
+ Transfer 
+Learning
+ 
+Method
+ 
+with
+ MobileNetV2 
+Architecture
+1
+st
+ 
+Ariel Maulana
+ 
+Fakultas
+ 
+Ilmu Terapan Universitas Telkom 
+Bandung, Indonesia
+arielmaulanaam@student.telkomuniversity.ac.id
+2
+nd
+ 
+ 
+D
+wi Farrel 
+Elfarindu
+ 
+Fakultas
+ 
+Ilmu Terapan 
+Universitas Telkom 
+Bandung, Indonesia
+dwifarrelelfarindu@student.telkomuniversity.ac.id
+3
+rd
+ 
+Muhammad Zharfan Al Ghifari
+Fakultas 
+Ilmu Terapan 
+Universitas Telkom
+Bandung, Indonesia 
+muhammadzharfanal@student.telkomuniversity.ac.id
+Abstrak
+ — 
+Daun ketapang (
+Terminalia
+ 
+catappa
+) merupakan tanaman tropis yang memiliki kandungan senyawa bioaktif tinggi dan banyak dimanfaatkan dalam bidang kesehatan maupun lingkungan. 
+Tingkat kematangan daun memengaruhi kandungan senyawa aktif yang terdapat di dalamnya sehingga proses identifikasi tingkat kematangan menjadi aspek penting. Namun, proses identifikasi secara manual masih bersifat subjektif dan bergantung pada pengamatan visual manusia. Oleh karena itu, penelitian ini mengusulkan sistem klasifikasi tingkat kematangan daun ketapang berbasis citra digital menggunakan metode 
+transfer learning
+ dengan arsitektur MobileNetV2.
+Dataset penelitian terdiri dari 
+±
+1.024 citra daun ketapang yang dibagi ke dalam tiga kelas, yaitu daun muda, daun menguning, dan daun tua. Tahapan penelitian meliputi pengumpulan dataset, preprocessing citra, augmentasi data, pelatihan model, dan evaluasi performa model. Model MobileNetV2 yang telah dilatih pada dataset ImageNet digunakan sebagai model dasar untuk meningkatkan performa klasifikasi pada dataset berukuran terbatas.
+Hasil pengujian menunjukkan bahwa model yang diusulkan mampu mencapai akurasi sebesar 95,42% pada data uji, dengan nilai 
+precision
+, 
+recall
+, dan 
+F1-score
+ yang tinggi pada seluruh kelas. Hasil tersebut menunjukkan bahwa pendekatan 
+transfer learning
+ menggunakan MobileNetV2 efektif digunakan dalam klasifikasi tingkat kematangan daun ketapang berbasis citra digital.
+Kata Kunci: 
+daun ketapang, transfer 
+learning
+, MobileNetV2, klasifikasi citra, 
+deep
+ 
+learning
+.
+Abstract
+ —
+ 
+Ketapang 
+leaves
+ (
+Terminalia
+ 
+catappa
+) are 
+tropical
+ 
+plants
+ 
+with
+ 
+high
+ 
+bioactive
+ 
+compounds
+ 
+and
+ are 
+widely
+ 
+used
+ 
+in 
+health
+ 
+and
+ 
+environmental
+ 
+fields
+. The 
+degree
+ 
+of
+ 
+leaf
+ 
+maturity
+ 
+influences
+ 
+the
+ 
+active
+ 
+compound
+ 
+content
+, making 
+the
+ 
+process
+ 
+of
+ 
+identifying
+ 
+maturity
+ 
+levels
+ 
+crucial
+. 
+However
+, manual 
+identification
+ 
+is
+ 
+still
+ 
+subjective
+ 
+and
+ 
+relies
+ 
+on
+ human visual 
+observation
+. 
+Therefore
+, 
+this
+ study 
+proposes
+ a digital 
+image-based
+ 
+classification
+ 
+system
+ 
+for
+ ketapang 
+leaf
+ 
+maturity
+ 
+using
+ a transfer 
+learning
+ 
+method
+ 
+with
+ 
+the
+ MobileNetV2 
+architecture
+.
+The 
+research
+ 
+dataset
+ 
+consists
+ 
+of
+ 
+approximately
+ 
+±
+1,024 ketapang 
+leaf
+ 
+images
+ 
+divided
+ 
+into
+ 
+three
+ 
+classes
+: 
+young
+ 
+leaves
+, 
+yellowing
+ 
+leaves
+, 
+and
+ 
+old
+ 
+leaves
+. The 
+research
+ 
+stages
+ 
+included
+ 
+dataset
+ 
+collection
+, 
+image
+ 
+preprocessing
+, data 
+augmentation
+, model 
+training
+, 
+and
+ model 
+performance
+ 
+evaluation
+. The MobileNetV2 model 
+trained
+ 
+on
+ 
+the
+ 
+ImageNet
+ 
+dataset
+ 
+was
+ 
+used
+ as a 
+baseline
+ 
+to
+ 
+improve
+ 
+classification
+ 
+performance
+ 
+on
+ a 
+limited
+ 
+dataset
+.
+Test
+ 
+results
+ 
+showed
+ 
+that
+ 
+the
+ 
+proposed
+ model 
+achieved
+ 95.42% 
+accuracy
+ 
+on
+ 
+the
+ 
+test
+ data, 
+with
+ 
+high
+ 
+precision
+, 
+recall
+, 
+and
+ F1-score 
+values
+ ​​
+across
+ 
+all
+ 
+classes
+. 
+These
+ 
+results
+ 
+indicate
+ 
+that
+ 
+the
+ transfer 
+learning
+ 
+approach
+ 
+using
+ MobileNetV2 
+is
+ 
+effective
+ in 
+classifying
+ 
+the
+ 
+maturity
+ level 
+of
+ ketapang 
+leaves
+ 
+based
+ 
+on
+ digital 
+images
+.
+Keywords
+: 
+ketapang 
+leaf
+, transfer 
+learning
+, MobileNetV2, 
+image
+ 
+classification
+, 
+deep
+ 
+learning
+.
+PENDAHULUAN
+Daun ketapang (
+Terminalia
+ 
+catappa
+ L
+.) merupakan salah satu tanaman tropis yang tersebar luas di kawasan Asia Tenggara, termasuk
+ 
+Indonesia. Tanaman ini dikenal memiliki potensi bioaktif yang signifikan, terutama pada senyawa 
+polifenol
+, tanin,
+ dan 
+flavonoid
+ yang terkandung dalam daunnya
+ [1]
+. Kadar senyawa bioaktif tersebut sangat bervariasi tergantung pada tingkat kematangan daun, sehingga identifikasi tingkat 
+kematangan menjadi aspek yang sangat krusial dalam pemanfaatan tanaman ini secara optimal untuk aplikasi farmasi, kosmetik, dan suplemen kesehatan.
+Secara tradisional, penentuan tingkat kematangan daun ketapang dilakukan secara visual oleh tenaga ahli berdasarkan karakteristik warna, tekstur, dan 
+morfologi
+ daun. Pendekatan ini bersifat subjektif karena bergantung pada pengalaman dan persepsi individu pemeriksa, memerlukan keahlian khusus yang sulit dipelajari secara cepat, dan rentan terhadap kesalahan 
+human 
+judgment
+. Lebih lanjut, metode visual tidak dapat diskalakan untuk kebutuhan industri yang mengolah volume daun besar secara konsisten. Oleh karena itu, pengembangan sistem klasifikasi otomatis berbasis citra digital menjadi kebutuhan mendesak untuk mendukung aplikasi industri skala besar, standardisasi kualitas, dan 
+akselerasi
+ penelitian 
+agronomis 
+[3].
+Seiring dengan kemajuan pesat dalam bidang 
+computer
+ 
+vision
+ dan 
+deep
+ 
+learning
+, 
+Convolutional
+ Neural Network
+ (CNN) telah terbukti sangat efektif dalam tugas-tugas analisis citra di berbagai domain, termasuk pertanian presisi dan 
+monitoring
+ tanaman [4], [5]. Salah satu pendekatan yang sangat menjanjikan adalah 
+transfer 
+learning
+,
+ yaitu teknik memanfaatkan pengetahuan yang telah dipelajari oleh model 
+neural 
+network
+ pada 
+dataset
+ besar dan domain umum (seperti 
+ImageNet
+ dengan jutaan citra beragam) untuk diterapkan pada 
+dataset
+ kecil dan domain spesifik [6]. 
+Transfer 
+learning
+ telah terbukti mampu mengatasi tantangan keterbatasan data berlabel dan mempercepat proses pembelajaran model tanpa perlu melatih arsitektur dari nol, sehingga sangat sesuai untuk aplikasi pada 
+dataset
+ penelitian berukuran terbatas seperti klasifikasi daun ketapang.
+Dalam penelitian ini, arsitektur MobileNetV2 dipilih sebagai model dasar untuk 
+transfer 
+learning
+. 
+MobileNetV2
+ adalah arsitektur 
+neural 
+network
+ yang dirancang khusus untuk efisiensi komputasi tinggi dengan akurasi yang kompetitif, menggunakan teknik 
+inverted
+ 
+residual
+ dan 
+linear 
+bottleneck
+ [7]. Keunggulan utama MobileNetV2 adalah 
+footprint
+ model yang ringan (parameter sedikit) dan latensi inferensi yang rendah, sehingga cocok untuk aplikasi 
+real-
+time
+ dan 
+deployment
+ di perangkat dengan keterbatasan komputasi. Selain itu, MobileNetV2 telah divalidasi pada berbagai tugas klasifikasi citra dan terbukti 
+memberikan 
+trade-off
+ yang baik antara akurasi dan efisiensi
+ 
+karakteristik yang sangat penting untuk sistem deteksi tingkat kematangan daun yang praktis dan dapat diintegrasikan dalam 
+workflow
+ industri.
+Berdasarkan motivasi dan kebutuhan praktis tersebut, penelitian ini bertujuan untuk: (1) mengembangkan sistem klasifikasi otomatis berbasis citra digital dan 
+deep
+ 
+learning
+ untuk identifikasi tingkat kematangan daun ketapang, (2) mengevaluasi performa 
+transfer 
+learning
+ dengan arsitektur MobileNetV2 pada 
+dataset
+ daun ketapang yang terbatas, dan (3) memberikan 
+baseline
+ dan validasi awal untuk potensi implementasi sistem dalam konteks industri dan penelitian. Diharapkan sistem yang diusulkan dapat menjadi solusi praktis dan 
+scalable
+ untuk mendukung optimalisasi proses ekstraksi, standardisasi kualitas, dan akselerasi pengembangan produk berbasis daun ketapang.
+KAJIAN
+ 
+TEORI
+Terminalia
+ 
+catappa
+ L
+. (Daun Ketapang)
+Terminalia
+ 
+catappa
+, lebih dikenal sebagai ketapang atau 
+tropical
+ 
+almond
+, adalah pohon berukuran besar yang termasuk dalam keluarga 
+Combretaceae
+.
+ Pohon ini tersebar luas di kawasan Asia Tenggara dan telah lama dimanfaatkan oleh masyarakat lokal dalam pengobatan tradisional [8]. Daun ketapang memiliki bentuk oval memanjang dengan panjang 15-30 cm dan lebar 8-15 cm, dan menunjukkan perubahan warna yang karakteristik seiring dengan proses pematangan [9].
+Komposisi fitokimia daun ketapang sangat kaya dan beragam. Penelitian fitokimia mengungkapkan kehadiran senyawa 
+polifenol
+, tanin 
+hidrolisabel
+, flavonoid, asam organik, dan berbagai metabolit sekunder lainnya [2]. Kandungan 
+polifenol
+ dalam daun ketapang dilaporkan berkisar antara 5-15% tergantung pada kondisi pertumbuhan tanaman dan terutama tergantung pada tingkat kematangan daun. Daun muda memiliki konsentrasi metabolit aktif yang lebih tinggi dibandingkan daun yang sudah tua, sementara daun dalam fase transisi menunjukkan profil kimia yang berbeda lagi,[8].
+Aplikasi industri daun ketapang mencakup ekstraksi antioksidan untuk industri farmasi dan suplemen, produksi teh herbal, ekstraksi 
+tannin
+ untuk industri tekstil dan penyamakan kulit, serta pengembangan produk kosmetik [1]. Mengingat pentingnya tingkat 
+kematangan dalam menentukan kualitas dan aplikasi produk akhir, identifikasi yang cepat dan akurat menjadi kritis dalam manajemen rantai pasokan dan 
+quality
+ 
+control
+ industri.
+Pengolahan Citra Digital 
+Pengolahan citra digital (digital 
+image
+ 
+processing
+) adalah proses memanipulasi dan menganalisis citra digital menggunakan algoritma komputasi untuk mengekstrak informasi atau meningkatkan kualitas citra [10]. Citra digital direpresentasikan sebagai matriks nilai numerik di mana setiap elemen (
+pixel
+) mewakili intensitas cahaya. Pada citra RGB (Red-Green-
+Blue
+), setiap 
+pixel
+ memiliki tiga 
+channel
+ nilai—merah, hijau, dan biru—masing-masing berkisar 0-255, menghasilkan 16.7 juta kemungkinan warna [11].
+Dalam konteks penelitian ini, tahap 
+preprocessing
+ citra sangat penting untuk mempersiapkan data masukan agar optimal untuk model 
+deep
+ 
+learning
+. 
+Preprocessing
+ citra umumnya mencakup langkah-langkah berikut: (1) 
+Resizing
+: mengubah ukuran semua citra ke dimensi seragam (misalnya 224×224 
+pixel
+) agar kompatibel dengan arsitektur model 
+input
+; (2) Normalisasi: 
+menskalakan
+ nilai 
+pixel
+ ke rentang standar (0-1 atau -1 hingga 1) untuk mempercepat konvergensi 
+training
+; (3) 
+Color
+ 
+space
+ 
+conversion
+: konversi dari RGB ke 
+grayscale
+ jika diperlukan untuk mengurangi kompleksitas komputasi; (4) 
+Noise
+ 
+reduction
+: aplikasi filter untuk mengurangi 
+noise
+ citra yang dapat mengganggu pembelajaran model [12].
+Data 
+augmentation
+ adalah teknik yang menciptakan variasi sintetis dari citra asli dengan melakukan transformasi geometris dan 
+fotometris
+ tanpa mengubah label kelas. Teknik 
+augmentasi
+ yang umum digunakan meliputi: 
+rotation
+ (rotasi citra), horizontal/
+vertical
+ 
+flip
+ (pencerminan), 
+brightness
+ 
+adjustment
+ (penyesuaian kecerahan), 
+zoom
+, 
+cropping
+, dan 
+shift
+ (pergeseran). 
+Augmentasi
+ data sangat bermanfaat ketika 
+dataset
+ terbatas, karena meningkatkan keragaman data 
+training
+ dan membantu model belajar fitur yang lebih 
+robust
+ dan 
+generalisable
+ [13].
+Transfer 
+Learning
+ dan Domain 
+Adaptation
+Transfer 
+learning
+ adalah pendekatan 
+machine
+ 
+learning
+ di mana pengetahuan yang telah dipelajari dari satu 
+task
+ atau domain diterapkan untuk meningkatkan pembelajaran pada 
+task
+ atau domain yang berbeda namun terkait [6]. 
+Intuisi di balik transfer 
+learning
+ adalah bahwa fitur-fitur tingkat rendah yang dipelajari dari 
+dataset
+ besar dan domain umum sering kali dapat ditransfer dan dimanfaatkan untuk 
+task
+ spesifik dengan 
+dataset
+ lebih kecil [14].
+Terdapat beberapa strategi transfer 
+learning
+ yang umum digunakan dalam 
+deep
+ 
+learning
+: (1) 
+Feature
+ 
+extraction
+: menggunakan model 
+pre-trained
+ sebagai 
+fixed
+ 
+feature
+ 
+extractor
+, di mana hanya 
+fully
+ 
+connected
+ layer terakhir yang dilatih ulang; (2) Fine-
+tuning
+: melatih kembali sebagian atau seluruh layer model 
+pre-trained
+ dengan 
+learning
+ 
+rate
+ yang kecil untuk menghindari 
+overfitting
+; (3) Domain 
+adaptation
+: menyesuaikan model untuk mengatasi pergeseran distribusi data antara domain sumber dan target [6]. Dalam penelitian ini, strategi 
+fine-tuning
+ digunakan, di mana model MobileNetV2 
+pre-trained
+ pada 
+ImageNet
+ dilatih ulang pada 
+dataset
+ daun ketapang spesifik.
+Keuntungan utama transfer 
+learning
+ terhadap pembelajaran dari nol adalah: (1) Mengatasi keterbatasan data berlabel, yang sering menjadi 
+bottleneck
+ dalam aplikasi praktis 
+deep
+ 
+learning
+; (2) Mempercepat konvergensi 
+training
+ karena model sudah memiliki 
+inisialisasi
+ 
+weight
+ yang baik; (3) Meningkatkan akurasi pada 
+dataset
+ target, terutama ketika data target terbatas dan tidak dapat melatih model kompleks dari 
+scratch
+; (4) Mengurangi kebutuhan komputasi dan waktu 
+training
+ [14]. Pada studi lain tentang deteksi penyakit tanaman menggunakan 
+deep
+ 
+learning
+, transfer 
+learning
+ dengan berbagai 
+pre-trained
+ model telah menunjukkan performa superior dibandingkan pelatihan dari nol [5].
+Convolutional
+ Neural Network (CNN) dan Arsitektur 
+Deep
+ 
+Learning
+Convolutional
+ Neural Network (CNN) adalah kelas khusus dari 
+artificial
+ neural 
+network
+ yang dirancang untuk memproses data dengan struktur 
+grid-like
+, seperti citra dua dimensi. CNN memanfaatkan operasi konvolusi untuk mengekstrak fitur lokal dari 
+input
+ dan membangun representasi hierarkis dari fitur kompleks [15]. Struktur dasar CNN terdiri dari beberapa jenis layer:
+Convolutional
+ Layer: Layer ini menerapkan operasi konvolusi menggunakan filter (
+kernel
+) kecil yang digeser di seluruh citra 
+input
+. Setiap filter belajar mendeteksi pola lokal spesifik. 
+Output
+ dari 
+convolutional
+ layer disebut 
+feature
+ map.
+Activation
+ 
+Function
+ (
+ReLU
+): Fungsi 
+aktivasi
+ 
+Rectified
+ Linear Unit (
+ReLU
+), yang didefinisikan sebagai f(x) = 
+max
+(0, x), diterapkan setelah konvolusi untuk memperkenalkan 
+nonlinearitas
+. 
+ReLU
+ telah menjadi fungsi 
+aktivasi
+ standar dalam 
+deep
+ 
+learning
+ karena efisiensi komputasinya.
+Pooling
+ Layer: Layer ini melakukan 
+downsampling
+ untuk mengurangi dimensi 
+feature
+ map sambil mempertahankan informasi penting. Max 
+pooling
+, yang mengambil nilai maksimum dari region lokal, adalah teknik 
+pooling
+ paling umum.
+Fully
+ 
+Connected
+ Layer: Layer ini menghubungkan semua neuron dari layer sebelumnya ke layer saat ini. 
+Fully
+ 
+connected
+ layer biasanya digunakan di akhir 
+network
+ untuk 
+classification
+ 
+tasks
+.
+Arsitektur MobileNetV2
+MobileNetV2 adalah arsitektur neural 
+network
+ yang dirancang khusus untuk efisiensi tinggi pada perangkat 
+mobile
+ dan 
+edge
+ dengan keterbatasan komputasi [7]. Arsitektur ini menggabungkan beberapa inovasi kunci: (1) 
+Depthwise
+ 
+Separable
+ 
+Convolution
+: mengurangi jumlah parameter dengan memisahkan konvolusi spasial dari konvolusi lintas-
+channel
+; (2) 
+Inverted
+ 
+Residual
+ 
+Blocks
+: menggunakan ekspansi fitur yang diikuti kontraksi untuk efisiensi; (3) Linear 
+Bottleneck
+: menghapus 
+nonlinearitas
+ di 
+output
+ 
+bottleneck
+ untuk melestarikan informasi [7].
+Secara kuantitatif, MobileNetV2 mencapai akurasi top-1 71.3% pada 
+ImageNet
+ dengan hanya 3.5 juta parameter, dibandingkan dengan 
+ResNet
+ yang memerlukan parameter jauh lebih banyak. Latensi inferensi MobileNetV2 juga signifikan lebih rendah, membuatnya cocok untuk aplikasi real-
+time
+ [7]. Dalam konteks 
+plant
+ 
+disease
+ 
+detection
+ dan 
+plant
+ 
+leaf
+ 
+classification
+, studi-studi terbaru menunjukkan bahwa MobileNetV2 memberikan 
+trade-off
+ yang sangat baik antara akurasi dan efisiensi komputasi [17], [18].
+Model MobileNetV2 
+pre-trained
+ pada 
+ImageNet
+ sudah mengandung pengetahuan tentang fitur visual fundamental yang berguna untuk 
+wide
+ 
+range
+ dari 
+image
+ 
+classification
+ 
+tasks
+. Ketika diterapkan pada 
+dataset
+ daun ketapang melalui 
+fine-tuning
+, model dapat dengan cepat beradaptasi dengan fitur spesifik daun (warna, tekstur, bentuk) yang membedakan tingkat kematangan.
+III. 
+METODE
+A. Desain Sistem dan Arsitektur
+Sistem yang diusulkan merupakan sistem klasifikasi tingkat kematangan daun ketapang (
+Terminalia catappa
+) berbasis 
+deep learning
+ menggunakan metode 
+transfer learning
+ dengan arsitektur MobileNetV2. Sistem dirancang untuk mengklasifikasikan daun ke dalam tiga kategori, yaitu daun muda (hijau), daun menguning, dan daun tua berdasarkan citra digital.
+Secara umum, alur kerja sistem terdiri dari beberapa tahapan, yaitu pengumpulan data, 
+preprocessing
+ citra, augmentasi data, pelatihan model, dan evaluasi model. Pada tahap pelatihan, MobileNetV2 yang telah dilatih pada dataset ImageNet digunakan sebagai model dasar untuk mengekstraksi fitur citra daun. Selanjutnya, model dilakukan 
+fine-tuning
+ agar dapat mengenali karakteristik visual yang membedakan setiap tingkat kematangan daun.
+Performa model 
+dievaluasi
+ 
+menggunakan
+ 
+metrik
+ 
+accuracy
+, 
+precision
+, 
+recall
+, dan 
+F1-score
+. 
+Arsitektur MobileNetV2 dipilih karena memiliki ukuran model yang ringan dan efisien, sehingga mampu menghasilkan performa klasifikasi yang baik dengan kebutuhan komputasi yang relatif rendah.
+B. 
+Dataset
+ dan Klasifikasi Kelas
+Dataset
+ yang digunakan dalam penelitian ini terdiri dari 1.024 citra daun ketapang (
+Terminalia
+ 
+catappa
+) yang dikumpulkan secara langsung menggunakan kamera 
+smartphone
+ pada kondisi pencahayaan alami. 
+Pengambilan citra dilakukan dengan memperhatikan variasi sudut pengambilan gambar, latar belakang, dan intensitas cahaya untuk memperoleh dataset yang lebih beragam serta mendekati kondisi penggunaan di lapangan.
+Berdasarkan karakteristik visual dan tingkat kematangannya, citra daun ketapang dikelompokkan ke dalam tiga kelas, yaitu daun muda, daun menguning, dan daun tua. Pemilihan ketiga kelas tersebut didasarkan pada perbedaan warna, tekstur, dan perubahan morfologi daun yang terjadi selama proses pertumbuhan dan penuaan daun.
+Daun Muda (Young Leaves)
+ merupakan daun yang masih berada pada fase awal pertumbuhan dengan warna hijau cerah yang dominan, tekstur permukaan yang relatif halus, serta belum menunjukkan perubahan pigmen.
+Daun Menguning (Yellowing Leaves)
+ merupakan daun yang berada pada fase 
+transisi, ditandai dengan munculnya warna kuning pada sebagian permukaan daun akibat proses degradasi klorofil. Pada fase ini daun masih memiliki kombinasi warna hijau dan kuning.
+Daun Tua (Old Leaves)
+ merupakan daun yang telah memasuki fase penuaan (
+senescence
+), ditandai dengan dominasi warna kuning tua, cokelat, atau kemerahan serta perubahan tekstur yang lebih kasar dibandingkan fase sebelumnya.
+Untuk menjaga keseimbangan data, jumlah citra pada setiap kelas dibuat relatif seimbang. Setelah proses pengumpulan selesai dilakukan, seluruh citra menjalani tahapan 
+preprocessing
+ dan augmentasi data sebelum digunakan dalam proses pelatihan model MobileNetV2. Tahapan ini bertujuan untuk meningkatkan kualitas data masukan serta membantu model dalam mempelajari karakteristik visual dari masing-masing tingkat kematangan daun.
+C. 
+Preprocessing Citra dan 
+Augmentasi
+ Data
+Tahap
+ 
+preprocessing
+ 
+dilakukan
+ 
+untuk
+ 
+mempersiapkan
+ 
+citra
+ 
+daun
+ 
+ketapang
+ agar 
+sesuai
+ 
+dengan
+ 
+kebutuhan
+ model MobileNetV2 
+serta
+ 
+meningkatkan
+ 
+kualitas
+ data yang 
+digunakan
+ 
+dalam
+ proses 
+pelatihan
+. 
+Tahapan ini bertujuan untuk menyeragamkan ukuran citra, mempercepat proses komputasi, dan meningkatkan kemampuan model dalam mengenali pola visual pada setiap kelas daun.
+Langkah pertama yang dilakukan adalah 
+resizing
+ citra menjadi ukuran 224 × 224 piksel sesuai dengan ukuran masukan (
+input size
+) yang digunakan oleh arsitektur MobileNetV2. Proses 
+resizing
+ dilakukan menggunakan metode interpolasi bilinear untuk mempertahankan kualitas dan detail citra setelah perubahan ukuran.
+Selanjutnya, dilakukan proses normalisasi nilai piksel dengan mengubah rentang nilai piksel dari 0–255 menjadi 0–1. Normalisasi bertujuan untuk meningkatkan stabilitas proses pelatihan, mempercepat konvergensi model, serta mengurangi pengaruh perbedaan intensitas cahaya pada citra.
+Selain 
+preprocessing
+, penelitian ini juga menerapkan teknik 
+data augmentation
+ untuk meningkatkan keragaman data dan mengurangi risiko 
+overfitting
+. Proses augmentasi dilakukan secara otomatis selama pelatihan model dengan menghasilkan variasi citra baru dari data asli tanpa mengubah karakteristik utama objek daun. 
+Teknik augmentasi yang digunakan meliputi 
+horizontal flip
+, 
+vertical flip
+, rotasi, penyesuaian tingkat kecerahan (
+brightness adjustment
+), dan 
+zoom
+ dalam skala kecil.
+Penerapan 
+data augmentation
+ memungkinkan model memperoleh variasi data yang lebih beragam sehingga mampu meningkatkan kemampuan generalisasi saat melakukan klasifikasi pada citra daun ketapang yang belum pernah dilihat sebelumnya.
+D. Implementasi Transfer Learning MobileNetV2
+Penelitian ini menggunakan metode 
+transfer learning
+ dengan arsitektur MobileNetV2 yang telah dilatih sebelumnya pada dataset ImageNet. Penggunaan 
+transfer learning
+ bertujuan untuk memanfaatkan kemampuan model dalam mengekstraksi fitur visual umum sehingga proses pelatihan dapat dilakukan secara lebih efektif meskipun jumlah dataset relatif terbatas.
+Pada tahap implementasi, model MobileNetV2 digunakan sebagai 
+backbone
+ untuk proses ekstraksi fitur citra daun ketapang. Seluruh lapisan (
+layer
+) pada model MobileNetV2 diaktifkan kembali (
+unfreezing
+) sehingga parameter model dapat disesuaikan dengan karakteristik dataset yang digunakan. Proses penyesuaian parameter tersebut dilakukan melalui teknik 
+fine-tuning
+ dengan menggunakan 
+learning rate
+ yang kecil agar pengetahuan yang telah dipelajari dari dataset ImageNet tetap dapat dipertahankan.
+Untuk menyesuaikan model dengan kebutuhan klasifikasi tiga kelas, ditambahkan beberapa lapisan klasifikasi (
+classifier head
+) pada bagian akhir MobileNetV2. Lapisan tersebut terdiri dari 
+Global Average Pooling
+, 
+Dense Layer
+ dengan 256 neuron dan fungsi aktivasi ReLU, 
+Dropout Layer
+ sebesar 0,5 untuk mengurangi risiko 
+overfitting
+, serta 
+Dense Output Layer
+ dengan tiga neuron dan fungsi aktivasi Softmax sebagai keluaran klasifikasi tingkat kematangan daun ketapang.
+IV. HASIL DAN PEMBAHASAN
+A. Hasil Training dan Konvergensi Model
+Proses pelatihan model dilakukan menggunakan arsitektur MobileNetV2 dengan pendekatan 
+transfer learning
+ dan 
+fine-tuning
+ sesuai konfigurasi yang telah dijelaskan pada Bab III. Pelatihan model dijalankan menggunakan perangkat yang mendukung akselerasi GPU 
+untuk mempercepat proses komputasi. Selama proses pelatihan, model mempelajari karakteristik visual daun ketapang berdasarkan tiga kelas kematangan, yaitu daun muda, daun menguning, dan daun tua.
+Hasil pelatihan menunjukkan bahwa model mampu mencapai konvergensi dengan baik. Hal ini ditunjukkan oleh penurunan nilai 
+training loss
+ dan 
+validation loss
+ secara bertahap selama proses pelatihan. Nilai 
+training loss
+ mengalami penurunan dari 1,247 pada awal pelatihan menjadi 0,035 pada epoch terakhir. Sementara itu, 
+validation loss
+ juga menurun dari 1,154 menjadi 0,009. Penurunan nilai 
+loss
+ yang konsisten menunjukkan bahwa model mampu mempelajari pola dan fitur penting dari dataset secara efektif.
+Selain itu, nilai 
+training accuracy
+ dan 
+validation accuracy
+ mengalami peningkatan yang stabil pada setiap epoch. Peningkatan akurasi tersebut menunjukkan bahwa proses 
+fine-tuning
+ yang diterapkan berhasil meningkatkan kemampuan model dalam membedakan tingkat kematangan daun ketapang. Berdasarkan hasil pelatihan, 
+validation accuracy
+ mencapai nilai sekitar 98% pada epoch ke-70 dan cenderung stabil pada epoch-epoch berikutnya. Kondisi ini menunjukkan bahwa model telah mencapai titik konvergensi dan tidak memperoleh peningkatan performa yang signifikan meskipun pelatihan dilanjutkan.
+Untuk mencegah terjadinya 
+overfitting
+ dan penggunaan sumber daya komputasi yang berlebihan, diterapkan mekanisme 
+early stopping
+. Pelatihan model berhenti secara otomatis pada epoch ke-87 ketika tidak ditemukan peningkatan performa validasi dalam beberapa epoch berturut-turut. Penggunaan 
+early stopping
+ terbukti efektif dalam menjaga keseimbangan antara kemampuan model dalam mempelajari data pelatihan dan kemampuannya dalam melakukan generalisasi terhadap data baru.
+Secara keseluruhan, hasil pelatihan menunjukkan bahwa kombinasi arsitektur MobileNetV2, teknik 
+transfer learning
+, dan strategi 
+fine-tuning
+ mampu menghasilkan model yang stabil dengan tingkat konvergensi yang baik. Hal ini menjadi indikasi awal bahwa model memiliki potensi untuk menghasilkan performa klasifikasi yang tinggi pada proses pengujian.
+B. Hasil Evaluasi Model
+Setelah proses pelatihan selesai 
+dilakukan, model MobileNetV2 dievaluasi menggunakan data uji (
+test set
+) yang tidak digunakan selama proses pelatihan. Evaluasi ini bertujuan untuk mengukur kemampuan model dalam melakukan klasifikasi tingkat kematangan daun ketapang pada data yang belum pernah dilihat sebelumnya. Data uji terdiri dari 153 citra daun ketapang yang mewakili tiga kelas kematangan, yaitu daun muda, daun menguning, dan daun tua.
+ 
+Hasil evaluasi model ditunjukkan pada Tabel 4.1
+ berikut:
+Tabel 
+1
+ Hasil Evaluasi Model pada Data Uji
+Metrik
+Daun
+ Muda
+Daun
+ 
+Menguning
+Daun
+ 
+Tua
+Rata-rata
+Accuracy
+96,1%
+94,8%
+95,4%
+95,42%
+Precision
+95,2%
+94,5%
+94,7%
+94,8%
+Recall
+95,9%
+94,7%
+95,1%
+95,1%
+F1-Score
+95,55%
+94,6%
+94,9%
+94,9%
+Berdasarkan hasil pengujian, model berhasil mencapai tingkat akurasi rata-rata sebesar 
+95,42%
+. Nilai tersebut menunjukkan bahwa model mampu mengklasifikasikan sebagian besar citra daun ketapang ke dalam kelas yang sesuai. Tingginya nilai akurasi mengindikasikan bahwa fitur-fitur visual yang dipelajari oleh model mampu membedakan karakteristik setiap tingkat kematangan daun dengan baik.
+Kelas daun muda memperoleh performa terbaik dengan nilai akurasi sebesar 
+96,1%
+. Hasil ini menunjukkan bahwa karakteristik visual daun muda, seperti warna hijau yang dominan dan tekstur yang relatif seragam, lebih mudah dikenali oleh model dibandingkan kelas lainnya. Sementara itu, kelas daun menguning memperoleh nilai akurasi yang sedikit lebih rendah dibandingkan dua kelas lainnya. Kondisi ini dapat disebabkan oleh sifat daun menguning yang merupakan fase transisi sehingga memiliki karakteristik visual yang berada di antara daun muda dan daun tua.
+Selain akurasi, nilai 
+precision
+, 
+recall
+, dan 
+F1-score
+ pada seluruh kelas juga menunjukkan hasil yang tinggi dan relatif seimbang. Perbedaan nilai antar metrik yang kecil menunjukkan bahwa model memiliki kemampuan yang baik dalam mengenali objek secara konsisten tanpa kecenderungan menghasilkan kesalahan 
+klasifikasi yang dominan pada kelas tertentu. Dengan demikian, model tidak hanya memiliki tingkat ketepatan yang tinggi, tetapi juga mampu mempertahankan keseimbangan antara kemampuan mendeteksi kelas yang benar dan meminimalkan kesalahan prediksi.
+Secara keseluruhan, hasil evaluasi menunjukkan bahwa pendekatan 
+transfer learning
+ menggunakan MobileNetV2 efektif diterapkan untuk klasifikasi tingkat kematangan daun ketapang dan mampu menghasilkan performa yang stabil pada seluruh kelas pengujian.
+C. Analisis Confusion Matrix
+Untuk memperoleh pemahaman yang lebih mendalam mengenai performa model, dilakukan analisis menggunakan 
+confusion matrix
+. Analisis ini digunakan untuk melihat distribusi prediksi model terhadap setiap kelas serta mengidentifikasi pola kesalahan klasifikasi yang terjadi.
+Berdasarkan hasil pengujian, dari 51 citra daun muda yang terdapat pada data uji, sebanyak 49 citra berhasil diklasifikasikan dengan benar. Dua citra lainnya mengalami kesalahan klasifikasi, masing-masing diprediksi sebagai daun menguning dan daun tua. Hasil tersebut menunjukkan bahwa model memiliki kemampuan yang sangat baik dalam mengenali karakteristik daun muda dengan tingkat 
+recall
+ yang tinggi.
+Pada kelas daun menguning, sebanyak 48 dari 51 citra berhasil diklasifikasikan dengan benar. Sebagian kecil kesalahan terjadi ketika model mengklasifikasikan daun menguning sebagai daun muda maupun daun tua. Kondisi ini menunjukkan bahwa kelas daun menguning merupakan kelas yang paling menantang untuk dikenali karena berada pada fase transisi antara daun muda dan daun tua.
+Sementara itu, pada kelas daun tua, model berhasil mengklasifikasikan 49 dari 51 citra dengan benar. Dua citra lainnya diprediksi sebagai daun menguning. Hasil ini menunjukkan bahwa karakteristik visual daun tua relatif mudah dikenali oleh model, terutama karena adanya perubahan warna yang cukup signifikan dibandingkan kelas lainnya.
+Secara umum, pola kesalahan yang muncul menunjukkan bahwa kesalahan prediksi lebih banyak terjadi pada kelas-kelas yang berdekatan dalam spektrum kematangan daun, yaitu antara daun muda dan daun menguning serta antara daun menguning dan daun tua. 
+Sebaliknya, kesalahan klasifikasi langsung antara daun muda dan daun tua sangat jarang ditemukan. Pola tersebut menunjukkan bahwa model telah mampu memahami hubungan visual antar kelas secara logis dan sesuai dengan proses biologis kematangan daun ketapang.
+Dari sudut pandang aplikasi praktis, pola kesalahan ini dapat dianggap cukup baik karena kesalahan yang terjadi masih berada pada kelas yang memiliki kemiripan karakteristik visual. Dengan demikian, model tidak hanya memiliki tingkat akurasi yang tinggi, tetapi juga menghasilkan prediksi yang masuk akal berdasarkan tahapan kematangan daun yang sebenarnya.
+V. KESIMPULAN
+Penelitian ini berhasil mengembangkan sistem klasifikasi tingkat kematangan daun ketapang (
+Terminalia catappa
+) berbasis citra digital menggunakan metode 
+transfer learning
+ dengan arsitektur MobileNetV2. Sistem yang dibangun mampu mengklasifikasikan daun ketapang ke dalam tiga kategori, yaitu daun muda, daun menguning, dan daun tua berdasarkan karakteristik visual yang terdapat pada citra.
+Hasil pengujian menunjukkan bahwa model MobileNetV2 yang telah melalui proses 
+fine-tuning
+ mampu mencapai tingkat akurasi sebesar 
+95,42%
+, dengan nilai 
+precision
+, 
+recall
+, dan 
+F1-score
+ yang seluruhnya berada di atas 94%. Hasil tersebut menunjukkan bahwa model memiliki kemampuan yang baik dalam mengenali dan membedakan tingkat kematangan daun ketapang secara konsisten. Selain itu, analisis 
+confusion matrix
+ menunjukkan bahwa sebagian besar kesalahan klasifikasi terjadi pada kelas yang memiliki karakteristik visual yang berdekatan, yaitu antara daun menguning dengan daun muda maupun daun tua.
+Penggunaan metode 
+transfer learning
+ terbukti efektif dalam mengatasi keterbatasan jumlah dataset, karena model dapat memanfaatkan pengetahuan yang telah dipelajari sebelumnya dari dataset ImageNet. Selain menghasilkan tingkat akurasi yang tinggi, arsitektur MobileNetV2 juga memiliki kompleksitas komputasi yang relatif rendah sehingga berpotensi diterapkan pada perangkat dengan sumber daya terbatas.
+\
+Berdasarkan hasil yang diperoleh, dapat disimpulkan bahwa pendekatan 
+transfer learning
+ menggunakan MobileNetV2 merupakan metode yang efektif untuk klasifikasi tingkat kematangan 
+daun ketapang berbasis citra digital. Sistem yang dikembangkan memiliki potensi untuk dimanfaatkan dalam proses identifikasi tingkat kematangan daun secara otomatis, sehingga dapat mendukung kegiatan penelitian maupun aplikasi di bidang pertanian dan pengolahan tanaman berbasis teknologi.
+Sebagai pengembangan pada penelitian selanjutnya, disarankan untuk menambah jumlah dan variasi dataset dari berbagai kondisi lingkungan, melakukan pengujian menggunakan arsitektur 
+deep learning
+ lainnya, serta mengimplementasikan model ke dalam aplikasi berbasis web atau perangkat bergerak agar dapat digunakan secara langsung di lapangan.
+REFERENSI
