@@ -148,7 +148,11 @@ cython_debug/
 Thumbs.db
 
 # Project specific
-dataset/
+# Ignore images in dataset but keep directory structure
+dataset/**/*.jpg
+dataset/**/*.jpeg
+dataset/**/*.png
+dataset/**/*.bmp
 saved_model/
 web/static/uploads/
 model/*.h5
